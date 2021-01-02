@@ -3,5 +3,46 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-  }
+    "headlessui-angular": {
+      "projectType": "library",
+      "root": "projects/headlessui-angular",
+      "sourceRoot": "projects/headlessui-angular/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/headlessui-angular/tsconfig.lib.json",
+            "project": "projects/headlessui-angular/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/headlessui-angular/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/headlessui-angular/src/test.ts",
+            "tsConfig": "projects/headlessui-angular/tsconfig.spec.json",
+            "karmaConfig": "projects/headlessui-angular/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/headlessui-angular/tsconfig.lib.json",
+              "projects/headlessui-angular/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "headlessui-angular"
 }
