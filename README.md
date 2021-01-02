@@ -1,27 +1,63 @@
-# HeadlessuiAngular
+# headlessui-angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.0.4.
+Tries to bring headless components (https://headlessui.dev) to angular.
 
-## Development server
+_This project is in a very early stage and not much more than a proof of concept._
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+A set of completely unstyled, fully accessible UI components for angular, designed to integrate beautifully with Tailwind CSS.
 
-## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Menu Button (Dropdown)
 
-## Build
+### Basic example
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Menu Buttons are built using the `*appMenu`, `*appMenuButton`, `*appMenuItems`, and `*appMenuItem` directives.
 
-## Running unit tests
+The menu button `*appMenuButton` will automatically open/close the `*appMenuItems` when clicked, and when the menu is open, the list of items receives focus and is automatically navigable via the keyboard.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
+```html
+<div *appMenu>
+  <button *appMenuButton>More</button>
+  <ul *appMenuItems>
+    <li *appMenuItem="let active = active">
+      <a [class.bg-blue-500]="active" href="#account-settings">Account settings</a>
+    </li>
+    <li *appMenuItem="let active = active">
+      <a [class.bg-blue-500]="active" href="#documentation">Documentation</a>
+    </li>
+    <li *appMenuItem="let active = active; disabled: true">
+      <span>Invite a friend (coming soon!)</span>
+    </li>
+  </ul>
+</div>
+```
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+### Styling the active item
 
-## Further help
+This is a headless component so there are no styles included by default. Instead, the components expose useful information via let expressions that you can use to apply the styles you'd like to apply yourself.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+To style the active `*appMenuItem` you can read the `active` state, which tells you whether or not that menu item is the item that is currently focused via the mouse or keyboard.
+
+You can use this state to conditionally apply whatever active/focus styles you like, for instance a blue background like is typical in most operating systems.
+
+```html
+<div *appMenu>
+  <button *appMenuButton>More</button>
+  <ul *appMenuItems>
+    <li *appMenuItem="let active = active">
+      <!-- Use the `active` state to conditionally style the active item. -->
+      <a [class]="active ? 'bg-blue-500 text-white' : 'bg-white text-black'" href="#settings">Settings</a>
+    </li>
+  </ul>
+</div>
+```
+
+### TODO
+- [ ] search
+- [ ] complete keyboard navigation
+- [ ] code cleanup
+- [ ] unregister all listeners on destroy 
+- [ ] error if missing child/parent components
+- [ ] more tests
+  - disabled menu items
