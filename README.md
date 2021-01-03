@@ -9,6 +9,8 @@ A set of completely unstyled, fully accessible UI components for angular, design
 
 ## Menu Button (Dropdown)
 
+[View live demo](https://ibirrer.github.io/headlessui-angular/)
+
 ### Basic example
 
 Menu Buttons are built using the `*appMenu`, `*appMenuButton`, `*appMenuItems`, and `*appMenuItem` directives.

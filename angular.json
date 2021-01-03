@@ -63,6 +63,7 @@
             "polyfills": "projects/demo/src/polyfills.ts",
             "tsConfig": "projects/demo/tsconfig.app.json",
             "aot": true,
+            "baseHref": "headlessui-angular",
             "assets": [
               "projects/demo/src/favicon.ico",
               "projects/demo/src/assets"
