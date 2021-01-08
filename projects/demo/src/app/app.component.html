@@ -1,7 +1,7 @@
 <div class="mt-6 mb-32">
     <div class="max-w-4xl mx-auto sm:px-6 lg:px-8 space-y-16">
 
-        <!-- Unstyled -->
+        <!-- Unstyled menu -->
         <div class="sm:border border-gray-300 border-b h-56 sm:rounded-xl">
             <h1 class="text-xl mb-6 px-6 py-4 border-b border-gray-300">Unstyled</h1>
 
@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <!-- Styled -->
+        <!-- Styled menu -->
         <div class="sm:border border-gray-300 border-b  h-56 sm:rounded-xl">
             <h1 class="text-xl mb-6 px-6 py-4 border-b border-gray-300">Styled</h1>
 
@@ -87,6 +87,32 @@
                                     Sign out
                                 </a>
                             </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Unstyled listbox -->
+        <div class="sm:border border-gray-300 border-b h-56 sm:rounded-xl">
+            <h1 class="text-xl mb-6 px-6 py-4 border-b border-gray-300">Unstyled</h1>
+
+            <div class="flex items-center justify-center px-4">
+                <div class="relative inline-block text-left">
+                    <div *hlListbox>
+                        <button *hlListboxButton class="w-full">More</button>
+                        <ul *hlListboxOptions>
+                            <li *hlListboxOption="let active = active">
+                                <a [class.bg-blue-500]="active" href="#account-settings">Account settings</a>
+                            </li>
+                            <li *hlListboxOption="let active = active">
+                                <a [class.bg-blue-500]="active" href="#documentation">Documentation</a>
+                            </li>
+                            <li *hlListboxOption="let active = active; disabled: true">
+                                <span>Invite a friend (coming soon!)</span>
+                            </li>
                         </ul>
                     </div>
                 </div>
