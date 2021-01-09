@@ -1,4 +1,4 @@
-import { Directive, EmbeddedViewRef, Host, Input, NgModule, OnInit, Renderer2, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Component, Directive, EmbeddedViewRef, EventEmitter, Host, Input, NgModule, OnInit, Output, Renderer2, TemplateRef, ViewContainerRef } from '@angular/core';
 import { generateId } from '../util';
 
 
@@ -6,10 +6,15 @@ import { generateId } from '../util';
 /// LISTBOX
 
 
-@Directive({
-    selector: '[hlListbox]'
+
+
+// Outputs not supported in structural directives. See https://github.com/angular/angular/issues/12121.
+// Use a component instead
+@Component({
+    selector: 'hl-listbox',
+    template: '<ng-content></ng-content>'
 })
-export class ListboxDirective implements OnInit {
+export class ListboxComponent<T>  {
     expanded = false;
 
     view!: EmbeddedViewRef<any>;
@@ -18,18 +23,16 @@ export class ListboxDirective implements OnInit {
 
     listboxButton!: ListboxButtonDirective;
     listboxOptionsPanel!: ListboxOptionsPanelDirective;
-    listboxOptions: ListboxOptionDirective[] = []
-    activeOption: ListboxOptionDirective | null = null;
+    listboxOptions: ListboxOptionDirective<T>[] = []
+    activeOption: ListboxOptionDirective<T> | null = null;
 
-    constructor(
-        private templateRef: TemplateRef<any>,
-        private viewContainerRef: ViewContainerRef,
-        private renderer: Renderer2) {
-    }
+    @Input()
+    value: T | null = null;
 
-    ngOnInit(): void {
-        this.view = this.viewContainerRef.createEmbeddedView(this.templateRef);
-    }
+    @Output()
+    onChange: EventEmitter<T | null> = new EventEmitter();
+
+    constructor(private renderer: Renderer2) { }
 
     toggle() {
         if (this.expanded) {
@@ -40,6 +43,7 @@ export class ListboxDirective implements OnInit {
             this.listboxOptions = []
             this.activeOption = null
             this.windowClickUnlisten();
+            this.focusButton()
         } else {
             this.expanded = true
             this.listboxOptionsPanel.expand()
@@ -52,7 +56,22 @@ export class ListboxDirective implements OnInit {
         }
     }
 
-    focusOption(focusType: FocusType) {
+    select(value: T | null) {
+        this.onChange.emit(value)
+        this.listboxOptions.forEach(option => {
+            option.select(option.hlListboxOptionValue === value)
+        });
+    }
+
+    isSelected(value: T | null) {
+        return this.value === value;
+    }
+
+    focusButton() {
+        this.listboxButton.focus()
+    }
+
+    focusOption(focusType: FocusType<T>) {
         const activeOption = this.calculateFocusedOption(focusType)
         if (activeOption === this.activeOption) {
             return
@@ -68,7 +87,11 @@ export class ListboxDirective implements OnInit {
         });
     }
 
-    private calculateFocusedOption(focusType: FocusType): ListboxOptionDirective | null {
+    clickActive() {
+        this.activeOption?.element.click();
+    }
+
+    private calculateFocusedOption(focusType: FocusType<T>): ListboxOptionDirective<T> | null {
         let options;
         switch (focusType.kind) {
             case 'FocusSpecific':
@@ -97,6 +120,7 @@ export class ListboxDirective implements OnInit {
         }
     }
 
+    // TODO: use HostListener instead
     private initListeners(): (() => void) {
         return this.renderer.listen(window, 'click', (event: MouseEvent) => {
             const target = event.target as HTMLElement
@@ -125,7 +149,7 @@ export class ListboxButtonDirective implements OnInit {
     constructor(
         private templateRef: TemplateRef<any>,
         private viewContainerRef: ViewContainerRef,
-        @Host() private listbox: ListboxDirective,
+        @Host() private listbox: ListboxComponent<any>,
         private renderer: Renderer2) {
         listbox.listboxButton = this;
     }
@@ -144,6 +168,8 @@ export class ListboxButtonDirective implements OnInit {
             'keydown',
             (event: KeyboardEvent) => {
                 switch (event.key) {
+                    case 'Space':
+                    case 'Enter':
                     case 'ArrowDown':
                         event.preventDefault();
                         this.listbox.toggle();
@@ -160,6 +186,10 @@ export class ListboxButtonDirective implements OnInit {
                 }
             }
         );
+    }
+
+    focus() {
+        setTimeout(() => this.element?.focus())
     }
 
     private initAttributes(element: HTMLElement) {
@@ -197,7 +227,7 @@ export class ListboxOptionsPanelDirective {
     constructor(
         private templateRef: TemplateRef<any>,
         private viewContainerRef: ViewContainerRef,
-        @Host() private listbox: ListboxDirective,
+        @Host() private listbox: ListboxComponent<any>,
         private renderer: Renderer2) {
         this.listbox.listboxOptionsPanel = this;
     }
@@ -219,6 +249,12 @@ export class ListboxOptionsPanelDirective {
             'keydown',
             (event: KeyboardEvent) => {
                 switch (event.key) {
+                    case 'Space':
+                    case 'Enter':
+                        event.preventDefault()
+                        this.listbox.clickActive()
+                        break;
+
                     case 'ArrowDown':
                         event.preventDefault();
                         this.listbox.focusOption({ kind: 'FocusNext' })
@@ -252,24 +288,27 @@ export class ListboxOptionsPanelDirective {
 @Directive({
     selector: '[hlListboxOption]'
 })
-export class ListboxOptionDirective implements OnInit {
+export class ListboxOptionDirective<T> implements OnInit {
     view!: EmbeddedViewRef<any>
     element!: HTMLElement
-    context = { active: false };
+    context = { active: false, selected: false };
 
     @Input()
     hlListboxOptionDisabled: boolean = false;
 
+    @Input()
+    hlListboxOptionValue: T | null = null;
 
     constructor(
         private templateRef: TemplateRef<any>,
         private viewContainerRef: ViewContainerRef,
-        @Host() private listbox: ListboxDirective,
+        @Host() private listbox: ListboxComponent<any>,
         private renderer: Renderer2) {
         this.listbox.listboxOptions.push(this);
     }
 
     ngOnInit(): void {
+        this.context.selected = this.listbox.isSelected(this.hlListboxOptionValue)
         this.view = this.viewContainerRef.createEmbeddedView(this.templateRef, this.context);
         this.element = this.view.rootNodes[0]
         this.initAttributes(this.element)
@@ -278,6 +317,11 @@ export class ListboxOptionDirective implements OnInit {
 
     focus(active: boolean) {
         this.context.active = active;
+        this.view.markForCheck();
+    }
+
+    select(selected: boolean) {
+        this.context.selected = selected;
         this.view.markForCheck();
     }
 
@@ -290,7 +334,6 @@ export class ListboxOptionDirective implements OnInit {
         } else {
             this.element.removeAttribute('aria-disabled')
         }
-
     }
 
     private initListeners(element: HTMLElement) {
@@ -309,7 +352,14 @@ export class ListboxOptionDirective implements OnInit {
         this.renderer.listen(
             element,
             'click',
-            () => { this.listbox.toggle() }
+            (event) => {
+                if (this.hlListboxOptionDisabled) {
+                    event.preventDefault()
+                    return
+                }
+                this.listbox.select(this.hlListboxOptionValue)
+                this.listbox.toggle()
+            }
         );
     }
 }
@@ -318,20 +368,20 @@ export class ListboxOptionDirective implements OnInit {
 type FocusPrevious = { kind: 'FocusPrevious' }
 type FocusNext = { kind: 'FocusNext' }
 type FocusNothing = { kind: 'FocusNothing' }
-type FocusSpecific = { kind: 'FocusSpecific', option: ListboxOptionDirective }
+type FocusSpecific<T> = { kind: 'FocusSpecific', option: ListboxOptionDirective<T> }
 
-type FocusType =
+type FocusType<T> =
     | FocusPrevious
     | FocusNext
     | FocusNothing
-    | FocusSpecific
+    | FocusSpecific<T>
 
 
 
 @NgModule({
     imports: [],
-    exports: [ListboxDirective, ListboxButtonDirective, ListboxOptionsPanelDirective, ListboxOptionDirective],
-    declarations: [ListboxDirective, ListboxButtonDirective, ListboxOptionsPanelDirective, ListboxOptionDirective],
+    exports: [ListboxComponent, ListboxButtonDirective, ListboxOptionsPanelDirective, ListboxOptionDirective],
+    declarations: [ListboxComponent, ListboxButtonDirective, ListboxOptionsPanelDirective, ListboxOptionDirective],
     providers: []
 })
 export class ListboxModule { }

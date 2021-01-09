@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, DebugElement } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { resetIdCounter } from '../util';
 import { MenuButtonDirective, MenuDirective, MenuItemDirective, MenuItemsPanelDirective } from './menu';
-import { resetIdCounter } from './util';
 
 
 
