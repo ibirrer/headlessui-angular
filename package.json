@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --open",
     "build": "ng build --prod",
     "build:demo": "cross-env NODE_ENV=production ng build demo --prod",
     "test": "ng test headlessui-angular",
