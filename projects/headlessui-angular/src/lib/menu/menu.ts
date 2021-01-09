@@ -40,6 +40,7 @@ export class MenuDirective implements OnInit {
             this.menuItems = []
             this.activeItem = null
             this.windowClickUnlisten();
+            this.focusButton()
         } else {
             this.expanded = true
             this.menuItemsPanel.expand()
@@ -50,6 +51,10 @@ export class MenuDirective implements OnInit {
             this.menuButton.element.setAttribute('expanded', 'true')
             this.windowClickUnlisten = this.initListeners()
         }
+    }
+
+    focusButton() {
+        this.menuButton.focus()
     }
 
     focusItem(focusType: FocusType) {
@@ -66,6 +71,10 @@ export class MenuDirective implements OnInit {
             }
             item.focus(item === this.activeItem)
         });
+    }
+
+    clickActive() {
+        this.activeItem?.element.click();
     }
 
     private calculateFocusedItem(focusType: FocusType): MenuItemDirective | null {
@@ -144,6 +153,8 @@ export class MenuButtonDirective implements OnInit {
             'keydown',
             (event: KeyboardEvent) => {
                 switch (event.key) {
+                    case 'Space':
+                    case 'Enter':
                     case 'ArrowDown':
                         event.preventDefault();
                         this.menu.toggle();
@@ -160,6 +171,10 @@ export class MenuButtonDirective implements OnInit {
                 }
             }
         );
+    }
+
+    focus() {
+        setTimeout(() => this.element?.focus())
     }
 
     private initAttributes(element: HTMLElement) {
@@ -219,6 +234,12 @@ export class MenuItemsPanelDirective {
             'keydown',
             (event: KeyboardEvent) => {
                 switch (event.key) {
+                    case 'Space':
+                    case 'Enter':
+                        event.preventDefault()
+                        this.menu.clickActive()
+                        break;
+
                     case 'ArrowDown':
                         event.preventDefault();
                         this.menu.focusItem({ kind: 'FocusNext' })
@@ -309,7 +330,13 @@ export class MenuItemDirective implements OnInit {
         this.renderer.listen(
             element,
             'click',
-            () => { this.menu.toggle() }
+            (event) => {
+                if (this.hlMenuItemDisabled) {
+                    event.preventDefault()
+                    return
+                }
+                this.menu.toggle()
+            }
         );
     }
 }

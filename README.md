@@ -88,7 +88,10 @@ To animate the opening/closing of the menu panel, use Angular's built-in animati
 
 ### TODO
 - [ ] search
-- [ ] complete keyboard navigation
+- [ ] complete keyboard navigation and focus handling
+- [x] focus button after click on item
+- [x] choose with space and enter
+- [x] don't toggle it item is disabled
 - [ ] code cleanup
 - [ ] unregister all listeners on destroy 
 - [ ] error if missing child/parent components
