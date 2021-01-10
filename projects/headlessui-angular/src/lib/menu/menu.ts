@@ -31,8 +31,9 @@ export class MenuDirective implements OnInit {
         this.view = this.viewContainerRef.createEmbeddedView(this.templateRef);
     }
 
-    toggle() {
+    toggle(options = { focusButtonOnClose: true }) {
         if (this.expanded) {
+            // close items panel
             this.expanded = false
             this.menuItemsPanel.collapse()
             this.menuButton.element.removeAttribute('aria-controls')
@@ -40,8 +41,11 @@ export class MenuDirective implements OnInit {
             this.menuItems = []
             this.activeItem = null
             this.windowClickUnlisten();
-            this.focusButton()
+            if (options.focusButtonOnClose) {
+                this.focusButton()
+            }
         } else {
+            // open items panel
             this.expanded = true
             this.menuItemsPanel.expand()
             this.menuItemsPanel.focus()
@@ -109,13 +113,19 @@ export class MenuDirective implements OnInit {
     private initListeners(): (() => void) {
         return this.renderer.listen(window, 'click', (event: MouseEvent) => {
             const target = event.target as HTMLElement
+            const active = document.activeElement
 
             if (this.menuButton.element.contains(target)
                 || this.menuItemsPanel?.element?.contains(target)) {
                 return;
             }
 
-            this.toggle();
+            const clickedTargetIsFocusable =
+                active !== document.body
+                && active?.contains(target)
+
+            // do not focus button if the clicked element can have focus
+            this.toggle({ focusButtonOnClose: !clickedTargetIsFocusable });
         });
     }
 }

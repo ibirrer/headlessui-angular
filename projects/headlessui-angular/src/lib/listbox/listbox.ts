@@ -34,8 +34,9 @@ export class ListboxComponent<T>  {
 
     constructor(private renderer: Renderer2) { }
 
-    toggle() {
+    toggle(options = { focusButtonOnClose: true }) {
         if (this.expanded) {
+            // close items panel
             this.expanded = false
             this.listboxOptionsPanel.collapse()
             this.listboxButton.element.removeAttribute('aria-controls')
@@ -43,8 +44,11 @@ export class ListboxComponent<T>  {
             this.listboxOptions = []
             this.activeOption = null
             this.windowClickUnlisten();
-            this.focusButton()
+            if (options.focusButtonOnClose) {
+                this.focusButton()
+            }
         } else {
+            // open items panel
             this.expanded = true
             this.listboxOptionsPanel.expand()
             this.listboxOptionsPanel.focus()
@@ -124,13 +128,19 @@ export class ListboxComponent<T>  {
     private initListeners(): (() => void) {
         return this.renderer.listen(window, 'click', (event: MouseEvent) => {
             const target = event.target as HTMLElement
+            const active = document.activeElement
 
             if (this.listboxButton.element.contains(target)
                 || this.listboxOptionsPanel?.element?.contains(target)) {
                 return;
             }
 
-            this.toggle();
+            const clickedTargetIsFocusable =
+                active !== document.body
+                && active?.contains(target)
+
+            // do not focus button if the clicked element can have focus
+            this.toggle({ focusButtonOnClose: !clickedTargetIsFocusable });
         });
     }
 }
