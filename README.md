@@ -87,13 +87,18 @@ To animate the opening/closing of the menu panel, use Angular's built-in animati
 ```
 
 ### TODO
-- [ ] search
-- [ ] complete keyboard navigation and focus handling
+- [x] complete keyboard navigation and focus handling
 - [x] focus button after click on item
 - [x] choose with space and enter
 - [x] don't toggle it item is disabled
-- [ ] code cleanup
+- [x] search
+- [ ] Keys.End, Home, PageUp, PageDown
+- [ ] extract api in interface (toggle, focus, ...)
 - [ ] unregister all listeners on destroy 
 - [ ] error if missing child/parent components
 - [ ] more tests
   - disabled menu items
+- [ ] possible (and very minor) bugs that could be reported to headlessui.dev
+  - search 'A', 'SPACE' -> menu cannot be closed with 'SPACE'
+  - searching for capital letters does not work
+  - according to https://www.w3.org/TR/wai-aria-practices-1.2/examples/menu-button/menu-button-links.html the search should not concatendate search chars for menu. Also described here: https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-12. Also 'TAB' should close the menu bar and should focuse the next item. 

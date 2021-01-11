@@ -3,7 +3,7 @@ import { generateId } from '../util';
 
 
 
-/// MENU
+/// MENU - Spec: https://www.w3.org/TR/wai-aria-practices-1.2/#menubutton
 
 
 @Directive({
@@ -20,6 +20,8 @@ export class MenuDirective implements OnInit {
     menuItemsPanel!: MenuItemsPanelDirective;
     menuItems: MenuItemDirective[] = []
     activeItem: MenuItemDirective | null = null;
+    searchQuery: string = '';
+    searchDebounce: ReturnType<typeof setTimeout> | null = null;
 
     constructor(
         private templateRef: TemplateRef<any>,
@@ -81,6 +83,31 @@ export class MenuDirective implements OnInit {
         this.activeItem?.element.click();
     }
 
+    search(value: string) {
+        if (this.searchDebounce) {
+            clearTimeout(this.searchDebounce)
+        }
+        this.searchDebounce = setTimeout(() => this.clearSearch(), 350);
+
+        this.searchQuery += value.toLocaleLowerCase()
+        const matchingItem = this.menuItems.find(
+            item => {
+                const itemText = item.element.textContent?.trim().toLocaleLowerCase()
+                return itemText?.startsWith(this.searchQuery) && !item.hlMenuItemDisabled
+            }
+        )
+
+        if (matchingItem === undefined || matchingItem === this.activeItem) {
+            return
+        }
+
+        this.focusItem({ kind: 'FocusSpecific', item: matchingItem })
+    }
+
+    clearSearch() {
+        this.searchQuery = ''
+    }
+
     private calculateFocusedItem(focusType: FocusType): MenuItemDirective | null {
         let items;
         switch (focusType.kind) {
@@ -124,7 +151,7 @@ export class MenuDirective implements OnInit {
                 active !== document.body
                 && active?.contains(target)
 
-            // do not focus button if the clicked element can have focus
+            // do not focus button if the clicked element is itself focusable
             this.toggle({ focusButtonOnClose: !clickedTargetIsFocusable });
         });
     }
@@ -163,7 +190,7 @@ export class MenuButtonDirective implements OnInit {
             'keydown',
             (event: KeyboardEvent) => {
                 switch (event.key) {
-                    case 'Space':
+                    case ' ': // Space
                     case 'Enter':
                     case 'ArrowDown':
                         event.preventDefault();
@@ -244,7 +271,15 @@ export class MenuItemsPanelDirective {
             'keydown',
             (event: KeyboardEvent) => {
                 switch (event.key) {
-                    case 'Space':
+                    case ' ': // Space
+                        if (this.menu.searchQuery !== '') {
+                            event.preventDefault()
+                            this.menu.search(event.key)
+                        } else {
+                            event.preventDefault()
+                            this.menu.clickActive()
+                        }
+                        break;
                     case 'Enter':
                         event.preventDefault()
                         this.menu.clickActive()
@@ -268,6 +303,11 @@ export class MenuItemsPanelDirective {
                         event.preventDefault()
                         this.menu.toggle()
                         break
+
+                    default:
+                        if (event.key.length === 1) {
+                            this.menu.search(event.key)
+                        }
                 }
             }
         );

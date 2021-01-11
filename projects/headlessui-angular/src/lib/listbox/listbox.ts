@@ -25,6 +25,8 @@ export class ListboxComponent<T>  {
     listboxOptionsPanel!: ListboxOptionsPanelDirective;
     listboxOptions: ListboxOptionDirective<T>[] = []
     activeOption: ListboxOptionDirective<T> | null = null;
+    searchQuery: string = '';
+    searchDebounce: ReturnType<typeof setTimeout> | null = null;
 
     @Input()
     value: T | null = null;
@@ -36,7 +38,7 @@ export class ListboxComponent<T>  {
 
     toggle(options = { focusButtonOnClose: true }) {
         if (this.expanded) {
-            // close items panel
+            // close options panel
             this.expanded = false
             this.listboxOptionsPanel.collapse()
             this.listboxButton.element.removeAttribute('aria-controls')
@@ -48,7 +50,7 @@ export class ListboxComponent<T>  {
                 this.focusButton()
             }
         } else {
-            // open items panel
+            // open options panel
             this.expanded = true
             this.listboxOptionsPanel.expand()
             this.listboxOptionsPanel.focus()
@@ -95,6 +97,31 @@ export class ListboxComponent<T>  {
         this.activeOption?.element.click();
     }
 
+    search(value: string) {
+        if (this.searchDebounce) {
+            clearTimeout(this.searchDebounce)
+        }
+        this.searchDebounce = setTimeout(() => this.clearSearch(), 350);
+
+        this.searchQuery += value.toLocaleLowerCase()
+        const matchingOption = this.listboxOptions.find(
+            option => {
+                const optionText = option.element.textContent?.trim().toLocaleLowerCase()
+                return optionText?.startsWith(this.searchQuery) && !option.hlListboxOptionDisabled
+            }
+        )
+
+        if (matchingOption === undefined || matchingOption === this.activeOption) {
+            return
+        }
+
+        this.focusOption({ kind: 'FocusSpecific', option: matchingOption })
+    }
+
+    clearSearch() {
+        this.searchQuery = ''
+    }
+
     private calculateFocusedOption(focusType: FocusType<T>): ListboxOptionDirective<T> | null {
         let options;
         switch (focusType.kind) {
@@ -139,7 +166,7 @@ export class ListboxComponent<T>  {
                 active !== document.body
                 && active?.contains(target)
 
-            // do not focus button if the clicked element can have focus
+            // do not focus button if the clicked element is itself focusable
             this.toggle({ focusButtonOnClose: !clickedTargetIsFocusable });
         });
     }
@@ -178,7 +205,7 @@ export class ListboxButtonDirective implements OnInit {
             'keydown',
             (event: KeyboardEvent) => {
                 switch (event.key) {
-                    case 'Space':
+                    case ' ': // Space
                     case 'Enter':
                     case 'ArrowDown':
                         event.preventDefault();
@@ -259,7 +286,15 @@ export class ListboxOptionsPanelDirective {
             'keydown',
             (event: KeyboardEvent) => {
                 switch (event.key) {
-                    case 'Space':
+                    case ' ': // Space
+                        if (this.listbox.searchQuery !== '') {
+                            event.preventDefault()
+                            this.listbox.search(event.key)
+                        } else {
+                            event.preventDefault()
+                            this.listbox.clickActive()
+                        }
+                        break;
                     case 'Enter':
                         event.preventDefault()
                         this.listbox.clickActive()
@@ -283,6 +318,11 @@ export class ListboxOptionsPanelDirective {
                         event.preventDefault()
                         this.listbox.toggle()
                         break
+
+                    default:
+                        if (event.key.length === 1) {
+                            this.listbox.search(event.key)
+                        }
                 }
             }
         );
