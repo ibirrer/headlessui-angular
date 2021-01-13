@@ -9,17 +9,19 @@
                 <div class="relative inline-block text-left">
                     <div *hlMenu>
                         <button *hlMenuButton class="w-full">More</button>
-                        <ul *hlMenuItems>
-                            <li *hlMenuItem="let active = active">
-                                <a [class.bg-blue-500]="active" href="#account-settings">Account settings</a>
-                            </li>
-                            <li *hlMenuItem="let active = active">
-                                <a [class.bg-blue-500]="active" href="#documentation">Documentation</a>
-                            </li>
-                            <li *hlMenuItem="let active = active; disabled: true">
-                                <span>Invite a friend (coming soon!)</span>
-                            </li>
-                        </ul>
+                        <div *hlMenuItems>
+                            <a class="block" *hlMenuItem="let active = active" [class.bg-blue-500]="active"
+                                href="./#account-settings">
+                                Account settings
+                            </a>
+                            <a class="block" *hlMenuItem="let active = active" [class.bg-blue-500]="active"
+                                href="./#documentation">
+                                Documentation
+                            </a>
+                            <span class="block" *hlMenuItem="let active = active; disabled: true">
+                                Invite a friend (coming soon!)
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -45,7 +47,7 @@
                         </span>
 
 
-                        <ul *hlMenuItems @toggleAnimation
+                        <div *hlMenuItems @toggleAnimation
                             class="absolute right-0 w-56 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none">
                             <div class="px-4 py-3">
                                 <p class="text-sm leading-5">Signed in as</p>
@@ -56,13 +58,13 @@
 
                             <div class="py-1">
 
-                                <a *hlMenuItem="let active = active" href="#account-settings"
+                                <a *hlMenuItem="let active = active" href="./#account-settings"
                                     [class]="active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'"
                                     class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left">
                                     Account settings
                                 </a>
 
-                                <a *hlMenuItem="let active = active" href="#support"
+                                <a *hlMenuItem="let active = active" href="./#support"
                                     [class]="active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'"
                                     class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left">
                                     Support
@@ -73,7 +75,7 @@
                                     New feature (soon)
                                 </span>
 
-                                <a *hlMenuItem="let active = active" href="#license"
+                                <a *hlMenuItem="let active = active" href="./#license"
                                     [class]="active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'"
                                     class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left">
                                     License
@@ -81,13 +83,13 @@
                             </div>
 
                             <div class="py-1">
-                                <a *hlMenuItem="let active = active" href="#sign-out"
+                                <a *hlMenuItem="let active = active" href="./#sign-out"
                                     [class]="active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'"
                                     class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left">
                                     Sign out
                                 </a>
                             </div>
-                        </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -96,7 +98,7 @@
 
         <!-- Unstyled listbox -->
         <div class="sm:border border-gray-300 border-b h-56 sm:rounded-xl">
-            <h1 class="text-xl mb-6 px-6 py-4 border-b border-gray-300">Listbox Unstyled</h1>
+            <h1 class="text-xl mb-6 px-6 py-4 border-b border-gray-300">Listbox Unstyled (Draft!)</h1>
             <div class="flex items-center justify-center px-4">
                 <div class="relative inline-block text-left">
                     <hl-listbox [value]="selectedPerson" (onChange)="setSelectedPerson($event)">
@@ -104,7 +106,7 @@
                         <ul *hlListboxOptions>
                             <ng-container *ngFor="let person of people">
                                 <li *hlListboxOption="let selected = selected; let active = active; value: person"
-                                    [class.bg-blue-500]="active" href="#account-settings">
+                                    [class.bg-blue-500]="active" href="./#account-settings">
                                     <span class="w-5 inline-block">
                                         <ng-container *ngIf="selected">✔</ng-container>
                                     </span>

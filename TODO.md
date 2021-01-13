@@ -1,0 +1,12 @@
+### TODO
+- [x] complete keyboard navigation and focus handling
+- [x] focus button after click on item
+- [x] choose with space and enter
+- [x] don't toggle it item is disabled
+- [x] search
+- [ ] Keys.End, Home, PageUp, PageDown
+- [ ] cleanup: extract api in interface (toggle, focus, ...)
+- [ ] /#account-settingsunregister all listeners on destroy 
+- [ ] error if missing child/parent components
+- [ ] more tests
+  - disabled menu items

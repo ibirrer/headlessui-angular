@@ -1,10 +1,25 @@
 # headlessui-angular
 
-Tries to bring headless components (https://headlessui.dev) to Angular.
+A set of completely unstyled, fully accessible UI components for Angular based on [headlessui](https://headlessui.dev). Designed to integrate beautifully with Tailwind CSS.
 
-_This project is in a very early stage and not much more than a proof of concept._
 
-A set of completely unstyled, fully accessible UI components for Angular, designed to integrate beautifully with Tailwind CSS.
+## Installation
+
+_Tested with Angular 11 only._
+
+```sh
+# npm
+npm install ibirrer/headlessui-angular
+
+# Yarn
+yarn add ibirrer/headlessui-angular
+```
+
+## Components
+
+_This project is still in early development. So far, only the menu button component is available. Also expect the API to change._
+
+- [Menu Button (Dropdown)](#menu-button-dropdown)
 
 
 ## Menu Button (Dropdown)
@@ -20,18 +35,18 @@ The menu button `*hlMenuButton` will automatically open/close the `*hlMenuItems`
 
 ```html
 <div *hlMenu>
-  <button *hlMenuButton>More</button>
-  <ul *hlMenuItems>
-    <li *hlMenuItem="let active = active">
-      <a [class.bg-blue-500]="active" href="#account-settings">Account settings</a>
-    </li>
-    <li *hlMenuItem="let active = active">
-      <a [class.bg-blue-500]="active" href="#documentation">Documentation</a>
-    </li>
-    <li *hlMenuItem="let active = active; disabled: true">
-      <span>Invite a friend (coming soon!)</span>
-    </li>
-  </ul>
+  <button *hlMenuButton class="w-full">More</button>
+  <div *hlMenuItems>
+    <a *hlMenuItem="let active = active" [class.bg-blue-500]="active" href="./#account-settings">
+      Account settings
+    </a>
+    <a *hlMenuItem="let active = active" [class.bg-blue-500]="active" href="./#documentation">
+      Documentation
+    </a>
+    <span *hlMenuItem="let active = active; disabled: true">
+      Invite a friend (coming soon!)
+    </span>
+    </div>
 </div>
 ```
 
@@ -46,11 +61,13 @@ You can use this state to conditionally apply whatever active/focus styles you l
 ```html
 <div *hlMenu>
   <button *hlMenuButton>More</button>
-  <ul *hlMenuItems>
-    <li *hlMenuItem="let active = active">
-      <!-- Use the `active` state to conditionally style the active item. -->
-      <a [class]="active ? 'bg-blue-500 text-white' : 'bg-white text-black'" href="#settings">Settings</a>
-    </li>
+  <div *hlMenuItems>
+    <!-- Use the `active` state to conditionally style the active item. -->
+    <a *hlMenuItem="let active = active" 
+       [class]="active ? 'bg-blue-500 text-white' : 'bg-white text-black'" 
+       href="#settings">
+      Settings
+    </a>
   </ul>
 </div>
 ```
@@ -66,9 +83,9 @@ To animate the opening/closing of the menu panel, use Angular's built-in animati
     `<div *hlMenu>
         <button *hlMenuButton>Trigger</button>
         <!-- add the animation to the *hlMenuItems element -->
-        <ul *hlMenuItems @toggleAnimation>
-            <li *hlMenuItem="let active = active">Item A</li>
-        </ul>
+        <div *hlMenuItems @toggleAnimation>
+            <a *hlMenuItem="let active = active">Item A</a>
+        </div>
     </div>`
   animations: [
     trigger('toggleAnimation', [
@@ -85,20 +102,3 @@ To animate the opening/closing of the menu panel, use Angular's built-in animati
   ]
 })
 ```
-
-### TODO
-- [x] complete keyboard navigation and focus handling
-- [x] focus button after click on item
-- [x] choose with space and enter
-- [x] don't toggle it item is disabled
-- [x] search
-- [ ] Keys.End, Home, PageUp, PageDown
-- [ ] extract api in interface (toggle, focus, ...)
-- [ ] unregister all listeners on destroy 
-- [ ] error if missing child/parent components
-- [ ] more tests
-  - disabled menu items
-- [ ] possible (and very minor) bugs that could be reported to headlessui.dev
-  - search 'A', 'SPACE' -> menu cannot be closed with 'SPACE'
-  - searching for capital letters does not work
-  - according to https://www.w3.org/TR/wai-aria-practices-1.2/examples/menu-button/menu-button-links.html the search should not concatendate search chars for menu. Also described here: https://www.w3.org/TR/wai-aria-practices-1.2/#keyboard-interaction-12. Also 'TAB' should close the menu bar and should focuse the next item. 

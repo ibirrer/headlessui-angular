@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --open",
-    "build": "ng build --prod",
+    "build:lib": "ng build --prod && cpy README.md dist/headlessui-angular",
     "build:demo": "cross-env NODE_ENV=production ng build demo --prod",
     "test": "ng test headlessui-angular",
     "test:ci": "ng test headlessui-angular --karma-config=projects/headlessui-angular/karma-ci.conf.js",
@@ -35,6 +35,7 @@
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
+    "cpy-cli": "^3.1.1",
     "cross-env": "^7.0.3",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
