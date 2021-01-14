@@ -9,10 +9,10 @@ _Tested with Angular 11 only._
 
 ```sh
 # npm
-npm install ibirrer/headlessui-angular
+npm install headlessui-angular
 
 # Yarn
-yarn add ibirrer/headlessui-angular
+yarn add headlessui-angular
 ```
 
 ## Components
