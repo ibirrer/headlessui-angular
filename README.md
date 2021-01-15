@@ -24,7 +24,7 @@ _This project is still in early development. So far, only the menu button compon
 
 ## Menu Button (Dropdown)
 
-[View live demo](https://ibirrer.github.io/headlessui-angular/)
+[View live demo on StackBlitz](https://stackblitz.com/edit/tailwind-jquqq3?file=src/app/app.component.html)
 
 ### Basic example
 
