@@ -20,7 +20,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "lib",
+            "prefix": "hl",
             "style": "kebab-case"
           }
         ],
@@ -28,7 +28,7 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "lib",
+            "prefix": "hl",
             "style": "camelCase"
           }
         ]

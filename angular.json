@@ -7,7 +7,7 @@
       "projectType": "library",
       "root": "projects/headlessui-angular",
       "sourceRoot": "projects/headlessui-angular/src",
-      "prefix": "lib",
+      "prefix": "hl",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
@@ -141,18 +141,6 @@
               "projects/demo/**/*.ts",
               "projects/demo/**/*.html"
             ]
-          }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "projects/demo/e2e/protractor.conf.js",
-            "devServerTarget": "demo:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "demo:serve:production"
-            }
           }
         }
       }

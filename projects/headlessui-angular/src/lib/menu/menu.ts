@@ -1,5 +1,5 @@
-import { Directive, EmbeddedViewRef, Host, Input, NgModule, OnInit, Renderer2, TemplateRef, ViewContainerRef } from '@angular/core';
-import { generateId } from '../util';
+import { Directive, EmbeddedViewRef, Host, Input, NgModule, OnInit, Renderer2, TemplateRef, ViewContainerRef } from '@angular/core'
+import { generateId } from '../util'
 
 
 
@@ -10,18 +10,18 @@ import { generateId } from '../util';
     selector: '[hlMenu]'
 })
 export class MenuDirective implements OnInit {
-    expanded = false;
+    expanded = false
 
-    view!: EmbeddedViewRef<any>;
+    view!: EmbeddedViewRef<any>
 
     windowClickUnlisten!: (() => void)
 
-    menuButton!: MenuButtonDirective;
-    menuItemsPanel!: MenuItemsPanelDirective;
+    menuButton!: MenuButtonDirective
+    menuItemsPanel!: MenuItemsPanelDirective
     menuItems: MenuItemDirective[] = []
-    activeItem: MenuItemDirective | null = null;
-    searchQuery: string = '';
-    searchDebounce: ReturnType<typeof setTimeout> | null = null;
+    activeItem: MenuItemDirective | null = null
+    searchQuery = ''
+    searchDebounce: ReturnType<typeof setTimeout> | null = null
 
     constructor(
         private templateRef: TemplateRef<any>,
@@ -30,7 +30,7 @@ export class MenuDirective implements OnInit {
     }
 
     ngOnInit(): void {
-        this.view = this.viewContainerRef.createEmbeddedView(this.templateRef);
+        this.view = this.viewContainerRef.createEmbeddedView(this.templateRef)
     }
 
     toggle(options = { focusButtonOnClose: true }) {
@@ -42,7 +42,7 @@ export class MenuDirective implements OnInit {
             this.menuButton.element.removeAttribute('expanded')
             this.menuItems = []
             this.activeItem = null
-            this.windowClickUnlisten();
+            this.windowClickUnlisten()
             if (options.focusButtonOnClose) {
                 this.focusButton()
             }
@@ -76,18 +76,18 @@ export class MenuDirective implements OnInit {
                 this.menuItemsPanel.element?.removeAttribute('aria-activedescendant')
             }
             item.focus(item === this.activeItem)
-        });
+        })
     }
 
     clickActive() {
-        this.activeItem?.element.click();
+        this.activeItem?.element.click()
     }
 
     search(value: string) {
         if (this.searchDebounce) {
             clearTimeout(this.searchDebounce)
         }
-        this.searchDebounce = setTimeout(() => this.clearSearch(), 350);
+        this.searchDebounce = setTimeout(() => this.clearSearch(), 350)
 
         this.searchQuery += value.toLocaleLowerCase()
         const matchingItem = this.menuItems.find(
@@ -109,7 +109,7 @@ export class MenuDirective implements OnInit {
     }
 
     private calculateFocusedItem(focusType: FocusType): MenuItemDirective | null {
-        let items;
+        let items
         switch (focusType.kind) {
             case 'FocusSpecific':
                 return focusType.item
@@ -120,19 +120,19 @@ export class MenuDirective implements OnInit {
             case 'FocusNext':
                 items = this.menuItems.filter(item => !item.hlMenuItemDisabled)
                 if (this.activeItem === null) {
-                    return items[0];
+                    return items[0]
                 } else {
-                    let nextIndex = Math.min(items.indexOf(this.activeItem) + 1, items.length - 1);
-                    return items[nextIndex];
+                    const nextIndex = Math.min(items.indexOf(this.activeItem) + 1, items.length - 1)
+                    return items[nextIndex]
                 }
 
             case 'FocusPrevious':
                 items = this.menuItems.filter(item => !item.hlMenuItemDisabled)
                 if (this.activeItem === null) {
-                    return items[items.length - 1];
+                    return items[items.length - 1]
                 } else {
-                    let previousIndex = Math.max(items.indexOf(this.activeItem) - 1, 0);
-                    return items[previousIndex];
+                    const previousIndex = Math.max(items.indexOf(this.activeItem) - 1, 0)
+                    return items[previousIndex]
                 }
         }
     }
@@ -144,7 +144,7 @@ export class MenuDirective implements OnInit {
 
             if (this.menuButton.element.contains(target)
                 || this.menuItemsPanel?.element?.contains(target)) {
-                return;
+                return
             }
 
             const clickedTargetIsFocusable =
@@ -152,8 +152,8 @@ export class MenuDirective implements OnInit {
                 && active?.contains(target)
 
             // do not focus button if the clicked element is itself focusable
-            this.toggle({ focusButtonOnClose: !clickedTargetIsFocusable });
-        });
+            this.toggle({ focusButtonOnClose: !clickedTargetIsFocusable })
+        })
     }
 }
 
@@ -166,24 +166,24 @@ export class MenuDirective implements OnInit {
     selector: '[hlMenuButton]'
 })
 export class MenuButtonDirective implements OnInit {
-    element!: HTMLElement;
+    element!: HTMLElement
 
     constructor(
         private templateRef: TemplateRef<any>,
         private viewContainerRef: ViewContainerRef,
         @Host() private menu: MenuDirective,
         private renderer: Renderer2) {
-        menu.menuButton = this;
+        menu.menuButton = this
     }
 
     ngOnInit(): void {
-        const view = this.viewContainerRef.createEmbeddedView(this.templateRef);
-        this.element = view.rootNodes[0];
+        const view = this.viewContainerRef.createEmbeddedView(this.templateRef)
+        this.element = view.rootNodes[0]
         this.initAttributes(this.element)
 
         this.renderer.listen(this.element, 'click', () => {
-            this.menu.toggle();
-        });
+            this.menu.toggle()
+        })
 
         this.renderer.listen(
             this.element,
@@ -193,21 +193,21 @@ export class MenuButtonDirective implements OnInit {
                     case ' ': // Space
                     case 'Enter':
                     case 'ArrowDown':
-                        event.preventDefault();
-                        this.menu.toggle();
+                        event.preventDefault()
+                        this.menu.toggle()
                         // delay focus until menu item is initialized
                         setTimeout(() => this.menu.focusItem({ kind: 'FocusNext' }))
-                        break;
+                        break
 
                     case 'ArrowUp':
-                        event.preventDefault();
-                        this.menu.toggle();
+                        event.preventDefault()
+                        this.menu.toggle()
                         // delay focus until menu item is initialized
                         setTimeout(() => this.menu.focusItem({ kind: 'FocusPrevious' }))
-                        break;
+                        break
                 }
             }
-        );
+        )
     }
 
     focus() {
@@ -216,8 +216,8 @@ export class MenuButtonDirective implements OnInit {
 
     private initAttributes(element: HTMLElement) {
         element.id = `headlessui-menu-button-${generateId()}`
-        element.setAttribute('type', 'button');
-        element.setAttribute('aria-haspopup', 'true');
+        element.setAttribute('type', 'button')
+        element.setAttribute('aria-haspopup', 'true')
     }
 }
 
@@ -230,38 +230,40 @@ export class MenuButtonDirective implements OnInit {
     selector: '[hlMenuItems]'
 })
 export class MenuItemsPanelDirective {
-    element: HTMLElement | null = null;
-
-    expand() {
-        const view = this.viewContainerRef.createEmbeddedView(this.templateRef);
-        const element = view.rootNodes[0];
-        this.initAttributes(element)
-        this.initListeners(element)
-        this.element = element;
-        view.markForCheck();
-    }
-
-    collapse() {
-        this.viewContainerRef.clear();
-        this.element = null;
-    }
+    element: HTMLElement | null = null
 
     constructor(
         private templateRef: TemplateRef<any>,
         private viewContainerRef: ViewContainerRef,
         @Host() private menu: MenuDirective,
         private renderer: Renderer2) {
-        this.menu.menuItemsPanel = this;
+        this.menu.menuItemsPanel = this
     }
+
+    expand() {
+        const view = this.viewContainerRef.createEmbeddedView(this.templateRef)
+        const element = view.rootNodes[0]
+        this.initAttributes(element)
+        this.initListeners(element)
+        this.element = element
+        view.markForCheck()
+    }
+
+    collapse() {
+        this.viewContainerRef.clear()
+        this.element = null
+    }
+
+
 
     focus() {
         setTimeout(() => this.element?.focus({ preventScroll: true }))
     }
 
     private initAttributes(element: HTMLElement) {
-        element.tabIndex = -1;
+        element.tabIndex = -1
         element.id = `headlessui-menu-items-${generateId()}`
-        element.setAttribute('role', 'menu');
+        element.setAttribute('role', 'menu')
         element.setAttribute('aria-labelledby', this.menu.menuButton.element.id)
     }
 
@@ -279,25 +281,25 @@ export class MenuItemsPanelDirective {
                             event.preventDefault()
                             this.menu.clickActive()
                         }
-                        break;
+                        break
                     case 'Enter':
                         event.preventDefault()
                         this.menu.clickActive()
-                        break;
+                        break
 
                     case 'ArrowDown':
-                        event.preventDefault();
+                        event.preventDefault()
                         this.menu.focusItem({ kind: 'FocusNext' })
-                        break;
+                        break
 
                     case 'ArrowUp':
-                        event.preventDefault();
+                        event.preventDefault()
                         this.menu.focusItem({ kind: 'FocusPrevious' })
-                        break;
+                        break
 
                     case 'Tab':
-                        event.preventDefault();
-                        break;
+                        event.preventDefault()
+                        break
 
                     case 'Escape':
                         event.preventDefault()
@@ -310,7 +312,7 @@ export class MenuItemsPanelDirective {
                         }
                 }
             }
-        );
+        )
     }
 }
 
@@ -324,38 +326,38 @@ export class MenuItemsPanelDirective {
     selector: '[hlMenuItem]'
 })
 export class MenuItemDirective implements OnInit {
+    @Input()
+    hlMenuItemDisabled = false
+
+
     view!: EmbeddedViewRef<any>
     element!: HTMLElement
-    context = { active: false };
-
-    @Input()
-    hlMenuItemDisabled: boolean = false;
-
+    context = { active: false }
 
     constructor(
         private templateRef: TemplateRef<any>,
         private viewContainerRef: ViewContainerRef,
         @Host() private menu: MenuDirective,
         private renderer: Renderer2) {
-        this.menu.menuItems.push(this);
+        this.menu.menuItems.push(this)
     }
 
     ngOnInit(): void {
-        this.view = this.viewContainerRef.createEmbeddedView(this.templateRef, this.context);
+        this.view = this.viewContainerRef.createEmbeddedView(this.templateRef, this.context)
         this.element = this.view.rootNodes[0]
         this.initAttributes(this.element)
         this.initListeners(this.element)
     }
 
     focus(active: boolean) {
-        this.context.active = active;
-        this.view.markForCheck();
+        this.context.active = active
+        this.view.markForCheck()
     }
 
     private initAttributes(element: HTMLElement) {
         element.id = `headlessui-menu-item-${generateId()}`
-        element.tabIndex = -1;
-        element.setAttribute('role', 'menuitem');
+        element.tabIndex = -1
+        element.setAttribute('role', 'menuitem')
         if (this.hlMenuItemDisabled) {
             this.element.setAttribute('aria-disabled', 'true')
         } else {
@@ -369,13 +371,13 @@ export class MenuItemDirective implements OnInit {
             element,
             'pointermove',
             () => this.menu.focusItem({ kind: 'FocusSpecific', item: this })
-        );
+        )
 
         this.renderer.listen(
             element,
             'pointerleave',
             () => this.menu.focusItem({ kind: 'FocusNothing' })
-        );
+        )
 
         this.renderer.listen(
             element,
@@ -387,7 +389,7 @@ export class MenuItemDirective implements OnInit {
                 }
                 this.menu.toggle()
             }
-        );
+        )
     }
 }
 
@@ -395,7 +397,7 @@ export class MenuItemDirective implements OnInit {
 type FocusPrevious = { kind: 'FocusPrevious' }
 type FocusNext = { kind: 'FocusNext' }
 type FocusNothing = { kind: 'FocusNothing' }
-type FocusSpecific = { kind: 'FocusSpecific', item: MenuItemDirective }
+type FocusSpecific = { kind: 'FocusSpecific'; item: MenuItemDirective }
 
 type FocusType =
     | FocusPrevious
