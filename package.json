@@ -9,7 +9,7 @@
     "build:demo": "cross-env NODE_ENV=production ng build demo --prod",
     "test": "ng test headlessui-angular",
     "test:ci": "ng test headlessui-angular --karma-config=projects/headlessui-angular/karma-ci.conf.js",
-    "lint": "ng lint"
+    "lint": "ng lint headlessui-angular"
   },
   "private": true,
   "dependencies": {

@@ -21,7 +21,7 @@ export class ListboxComponent<T>  {
     value: T | null = null
 
     @Output()
-    onChange: EventEmitter<T | null> = new EventEmitter()
+    valueChange: EventEmitter<T | null> = new EventEmitter()
 
     expanded = false
 
@@ -67,7 +67,7 @@ export class ListboxComponent<T>  {
     }
 
     select(value: T | null) {
-        this.onChange.emit(value)
+        this.valueChange.emit(value)
         this.listboxOptions.forEach(option => {
             option.select(option.hlListboxOptionValue === value)
         })
