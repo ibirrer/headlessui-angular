@@ -1,4 +1,4 @@
-import { Directive, EmbeddedViewRef, Host, Input, NgModule, OnInit, Renderer2, TemplateRef, ViewContainerRef } from '@angular/core'
+import { ChangeDetectorRef, Directive, ElementRef, Host, Input, NgModule, OnInit, Renderer2, TemplateRef, ViewContainerRef } from '@angular/core'
 import { generateId } from '../util'
 
 
@@ -9,11 +9,8 @@ import { generateId } from '../util'
 @Directive({
     selector: '[hlMenu]'
 })
-export class MenuDirective implements OnInit {
+export class MenuDirective {
     expanded = false
-
-    view!: EmbeddedViewRef<any>
-
     windowClickUnlisten!: (() => void)
 
     menuButton!: MenuButtonDirective
@@ -24,13 +21,7 @@ export class MenuDirective implements OnInit {
     searchDebounce: ReturnType<typeof setTimeout> | null = null
 
     constructor(
-        private templateRef: TemplateRef<any>,
-        private viewContainerRef: ViewContainerRef,
         private renderer: Renderer2) {
-    }
-
-    ngOnInit(): void {
-        this.view = this.viewContainerRef.createEmbeddedView(this.templateRef)
     }
 
     toggle(options = { focusButtonOnClose: true }) {
@@ -75,7 +66,7 @@ export class MenuDirective implements OnInit {
             } else {
                 this.menuItemsPanel.element?.removeAttribute('aria-activedescendant')
             }
-            item.focus(item === this.activeItem)
+            item.setActive(item === this.activeItem)
         })
     }
 
@@ -93,7 +84,7 @@ export class MenuDirective implements OnInit {
         const matchingItem = this.menuItems.find(
             item => {
                 const itemText = item.element.textContent?.trim().toLocaleLowerCase()
-                return itemText?.startsWith(this.searchQuery) && !item.hlMenuItemDisabled
+                return itemText?.startsWith(this.searchQuery) && !item.disabled
             }
         )
 
@@ -118,7 +109,7 @@ export class MenuDirective implements OnInit {
                 return null
 
             case 'FocusNext':
-                items = this.menuItems.filter(item => !item.hlMenuItemDisabled)
+                items = this.menuItems.filter(item => !item.disabled)
                 if (this.activeItem === null) {
                     return items[0]
                 } else {
@@ -127,7 +118,7 @@ export class MenuDirective implements OnInit {
                 }
 
             case 'FocusPrevious':
-                items = this.menuItems.filter(item => !item.hlMenuItemDisabled)
+                items = this.menuItems.filter(item => !item.disabled)
                 if (this.activeItem === null) {
                     return items[items.length - 1]
                 } else {
@@ -169,16 +160,14 @@ export class MenuButtonDirective implements OnInit {
     element!: HTMLElement
 
     constructor(
-        private templateRef: TemplateRef<any>,
-        private viewContainerRef: ViewContainerRef,
+        elementRef: ElementRef,
         @Host() private menu: MenuDirective,
         private renderer: Renderer2) {
+        this.element = elementRef.nativeElement
         menu.menuButton = this
     }
 
     ngOnInit(): void {
-        const view = this.viewContainerRef.createEmbeddedView(this.templateRef)
-        this.element = view.rootNodes[0]
         this.initAttributes(this.element)
 
         this.renderer.listen(this.element, 'click', () => {
@@ -254,8 +243,6 @@ export class MenuItemsPanelDirective {
         this.element = null
     }
 
-
-
     focus() {
         setTimeout(() => this.element?.focus({ preventScroll: true }))
     }
@@ -323,47 +310,47 @@ export class MenuItemsPanelDirective {
 
 
 @Directive({
-    selector: '[hlMenuItem]'
+    selector: '[hlMenuItem]',
+    exportAs: 'item'
 })
 export class MenuItemDirective implements OnInit {
     @Input()
-    hlMenuItemDisabled = false
-
-
-    view!: EmbeddedViewRef<any>
+    disabled = false
     element!: HTMLElement
-    context = { active: false }
+    private isActive = false
+
+    get active() {
+        return this.isActive
+    }
 
     constructor(
-        private templateRef: TemplateRef<any>,
-        private viewContainerRef: ViewContainerRef,
-        @Host() private menu: MenuDirective,
+        elementRef: ElementRef,
+        private changeDetectorRef: ChangeDetectorRef,
+        private menu: MenuDirective,
         private renderer: Renderer2) {
         this.menu.menuItems.push(this)
+        this.element = elementRef.nativeElement
     }
 
     ngOnInit(): void {
-        this.view = this.viewContainerRef.createEmbeddedView(this.templateRef, this.context)
-        this.element = this.view.rootNodes[0]
         this.initAttributes(this.element)
         this.initListeners(this.element)
     }
 
-    focus(active: boolean) {
-        this.context.active = active
-        this.view.markForCheck()
+    setActive(active: boolean) {
+        this.isActive = active
+        this.changeDetectorRef.markForCheck()
     }
 
     private initAttributes(element: HTMLElement) {
         element.id = `headlessui-menu-item-${generateId()}`
         element.tabIndex = -1
         element.setAttribute('role', 'menuitem')
-        if (this.hlMenuItemDisabled) {
+        if (this.disabled) {
             this.element.setAttribute('aria-disabled', 'true')
         } else {
             this.element.removeAttribute('aria-disabled')
         }
-
     }
 
     private initListeners(element: HTMLElement) {
@@ -383,7 +370,7 @@ export class MenuItemDirective implements OnInit {
             element,
             'click',
             (event) => {
-                if (this.hlMenuItemDisabled) {
+                if (this.disabled) {
                     event.preventDefault()
                     return
                 }

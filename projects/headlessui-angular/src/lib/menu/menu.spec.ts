@@ -184,12 +184,12 @@ describe('MenuTestComponent', () => {
   selector: 'app-menu-test',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template:
-    `<div *hlMenu>
-        <button *hlMenuButton>Trigger</button>
+    `<div hlMenu>
+        <button hlMenuButton>Trigger</button>
         <ul *hlMenuItems>
-            <li *hlMenuItem="let active = active">{{active}}</li>
-            <li *hlMenuItem="let active = active">{{active}}</li>
-            <li *hlMenuItem="let active = active">{{active}}</li>
+            <li hlMenuItem #item1="item">{{item1.active}}</li>
+            <li hlMenuItem #item2="item">{{item2.active}}</li>
+            <li hlMenuItem #item3="item">{{item3.active}}</li>
         </ul>
     </div>`
 })

@@ -28,22 +28,22 @@ _This project is still in early development. So far, only the menu button compon
 
 ### Basic example
 
-Menu Buttons are built using the `*hlMenu`, `*hlMenuButton`, `*hlMenuItems`, and `*hlMenuItem` directives.
+Menu Buttons are built using the `hlMenu`, `hlMenuButton`, `*hlMenuItems`, and `hlMenuItem` directives.
 
 The menu button `*hlMenuButton` will automatically open/close the `*hlMenuItems` when clicked, and when the menu is open, the list of items receives focus and is automatically navigable via the keyboard.
 
 
 ```html
-<div *hlMenu>
-  <button *hlMenuButton class="w-full">More</button>
+<div hlMenu>
+  <button hlMenuButton class="w-full">More</button>
   <div *hlMenuItems>
-    <a *hlMenuItem="let active = active" [class.bg-blue-500]="active" href="./#account-settings">
+    <a hlMenuItem #item1="item" [class.bg-blue-500]="item1.active" href="./#account-settings">
       Account settings
     </a>
-    <a *hlMenuItem="let active = active" [class.bg-blue-500]="active" href="./#documentation">
+    <a hlMenuItem #item2="item" [class.bg-blue-500]="item2.active" href="./#documentation">
       Documentation
     </a>
-    <span *hlMenuItem="let active = active; disabled: true">
+    <span hlMenuItem [disabled]="true">
       Invite a friend (coming soon!)
     </span>
     </div>
@@ -54,17 +54,17 @@ The menu button `*hlMenuButton` will automatically open/close the `*hlMenuItems`
 
 This is a headless component so there are no styles included by default. Instead, the components expose useful information via let expressions that you can use to apply the styles you'd like to apply yourself.
 
-To style the active `*hlMenuItem` you can read the `active` state, which tells you whether or not that menu item is the item that is currently focused via the mouse or keyboard.
+To style the active `hlMenuItem` you can read the `active` state, which tells you whether or not that menu item is the item that is currently focused via the mouse or keyboard.
 
 You can use this state to conditionally apply whatever active/focus styles you like, for instance a blue background like is typical in most operating systems.
 
 ```html
-<div *hlMenu>
-  <button *hlMenuButton>More</button>
+<div hlMenu>
+  <button hlMenuButton>More</button>
   <div *hlMenuItems>
     <!-- Use the `active` state to conditionally style the active item. -->
-    <a *hlMenuItem="let active = active" 
-       [class]="active ? 'bg-blue-500 text-white' : 'bg-white text-black'" 
+    <a hlMenuItem #item="item"
+       [class]="item.active ? 'bg-blue-500 text-white' : 'bg-white text-black'" 
        href="#settings">
       Settings
     </a>
@@ -80,11 +80,11 @@ To animate the opening/closing of the menu panel, use Angular's built-in animati
 @Component({
   <!-- ... -->
   template:
-    `<div *hlMenu>
-        <button *hlMenuButton>Trigger</button>
+    `<div hlMenu>
+        <button hlMenuButton>Trigger</button>
         <!-- add the animation to the *hlMenuItems element -->
         <div *hlMenuItems @toggleAnimation>
-            <a *hlMenuItem="let active = active">Item A</a>
+            <a hlMenuItem>Item A</a>
         </div>
     </div>`
   animations: [
@@ -101,4 +101,17 @@ To animate the opening/closing of the menu panel, use Angular's built-in animati
     ]),
   ]
 })
+```
+
+
+## Develop
+```sh
+git clone https://github.com/ibirrer/headlessui-angular.git
+cd headlessui-angular
+npm install
+npm start
+
+# open http://localhost:4200/
+# edit demo: projects/demo
+# edit lib:  projects/headlessui-angular
 ```
