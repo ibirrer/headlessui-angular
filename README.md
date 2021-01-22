@@ -28,7 +28,7 @@ _This project is still in early development. So far, only the menu button compon
 
 ### Basic example
 
-Menu Buttons are built using the `hlMenu`, `hlMenuButton`, `*hlMenuItems`, and `hlMenuItem` directives.
+Menu Buttons are built using the `hlMenu`, `hlMenuButton`, `*hlMenuItems`, and `*hlMenuItem` directives.
 
 The menu button `*hlMenuButton` will automatically open/close the `*hlMenuItems` when clicked, and when the menu is open, the list of items receives focus and is automatically navigable via the keyboard.
 
@@ -37,13 +37,13 @@ The menu button `*hlMenuButton` will automatically open/close the `*hlMenuItems`
 <div hlMenu>
   <button hlMenuButton class="w-full">More</button>
   <div *hlMenuItems>
-    <a hlMenuItem #item1="item" [class.bg-blue-500]="item1.active" href="./#account-settings">
+    <a *hlMenuItem="let item" [class.bg-blue-500]="item.active" href="./#account-settings">
       Account settings
     </a>
-    <a hlMenuItem #item2="item" [class.bg-blue-500]="item2.active" href="./#documentation">
+    <a *hlMenuItem="let item" [class.bg-blue-500]="item.active" href="./#documentation">
       Documentation
     </a>
-    <span hlMenuItem [disabled]="true">
+    <span *hlMenuItem="let item; disabled: true">
       Invite a friend (coming soon!)
     </span>
     </div>
@@ -63,7 +63,7 @@ You can use this state to conditionally apply whatever active/focus styles you l
   <button hlMenuButton>More</button>
   <div *hlMenuItems>
     <!-- Use the `active` state to conditionally style the active item. -->
-    <a hlMenuItem #item="item"
+    <a *hlMenuItem="let item"
        [class]="item.active ? 'bg-blue-500 text-white' : 'bg-white text-black'" 
        href="#settings">
       Settings
@@ -84,7 +84,7 @@ To animate the opening/closing of the menu panel, use Angular's built-in animati
         <button hlMenuButton>Trigger</button>
         <!-- add the animation to the *hlMenuItems element -->
         <div *hlMenuItems @toggleAnimation>
-            <a hlMenuItem>Item A</a>
+            <a *hlMenuItem>Item A</a>
         </div>
     </div>`
   animations: [
