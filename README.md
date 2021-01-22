@@ -24,7 +24,7 @@ _This project is still in early development. So far, only the menu button compon
 
 ## Menu Button (Dropdown)
 
-[View live demo on StackBlitz](https://stackblitz.com/edit/tailwind-yg3yhd?file=src/app/app.component.html)
+[View live demo on StackBlitz](https://stackblitz.com/edit/tailwind-1sybvr?file=src/app/app.component.html)
 
 ### Basic example
 

@@ -187,9 +187,9 @@ describe('MenuTestComponent', () => {
     `<div hlMenu>
         <button hlMenuButton>Trigger</button>
         <ul *hlMenuItems>
-            <li hlMenuItem #item1="item">{{item1.active}}</li>
-            <li hlMenuItem #item2="item">{{item2.active}}</li>
-            <li hlMenuItem #item3="item">{{item3.active}}</li>
+            <li *hlMenuItem="let item">{{item.active}}</li>
+            <li *hlMenuItem="let item">{{item.active}}</li>
+            <li *hlMenuItem="let item">{{item.active}}</li>
         </ul>
     </div>`
 })

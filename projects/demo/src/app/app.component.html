@@ -10,15 +10,15 @@
                     <div hlMenu>
                         <button hlMenuButton class="w-full">More</button>
                         <div *hlMenuItems>
-                            <a hlMenuItem #item1="item" class="block" [class.bg-blue-500]="item1.active"
+                            <a *hlMenuItem="let item" class="block" [class.bg-blue-500]="item.active"
                                 href="./#account-settings">
                                 Account settings
                             </a>
-                            <a hlMenuItem #item2="item" class="block" [class.bg-blue-500]="item2.active"
+                            <a *hlMenuItem="let item" class="block" [class.bg-blue-500]="item.active"
                                 href="./#account-settings">
                                 Documentation
                             </a>
-                            <span hlMenuItem [disabled]="true" class="block">
+                            <span *hlMenuItem="let item; disabled: true" class="block">
                                 Invite a friend (coming soon!)
                             </span>
                         </div>
@@ -57,33 +57,33 @@
                             </div>
 
                             <div class="py-1">
-                                <a hlMenuItem #item1="item" href="./#account-settings"
-                                    [class]="item1.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'"
+                                <a *hlMenuItem="let item" href="./#account-settings"
+                                    [class]="item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'"
                                     class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left">
                                     Account settings
                                 </a>
 
-                                <a hlMenuItem #item2="item" href="./#support"
-                                    [class]="item2.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'"
+                                <a *hlMenuItem="let item" href="./#support"
+                                    [class]="item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'"
                                     class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left">
                                     Support
                                 </a>
 
-                                <span hlMenuItem [disabled]="true"
+                                <span *hlMenuItem="let item; disabled: true"
                                     class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left text-gray-700 cursor-not-allowed opacity-50">
                                     New feature (soon)
                                 </span>
 
-                                <a hlMenuItem #item3="item" href="./#license"
-                                    [class]="item3.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'"
+                                <a *hlMenuItem="let item" href="./#license"
+                                    [class]="item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'"
                                     class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left">
                                     License
                                 </a>
                             </div>
 
                             <div class="py-1">
-                                <a hlMenuItem #item4="item" href="./#sign-out"
-                                    [class]="item4.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'"
+                                <a *hlMenuItem="let item" href="./#sign-out"
+                                    [class]="item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'"
                                     class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left">
                                     Sign out
                                 </a>
