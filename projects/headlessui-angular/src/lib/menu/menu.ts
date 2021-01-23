@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EmbeddedViewRef, Host, Input, NgModule, OnInit, Renderer2, TemplateRef, ViewContainerRef } from '@angular/core'
+import { Directive, ElementRef, EmbeddedViewRef, Input, NgModule, OnInit, Renderer2, TemplateRef, ViewContainerRef } from '@angular/core'
 import { generateId } from '../util'
 
 
@@ -35,7 +35,7 @@ export class MenuDirective {
             this.activeItem = null
             this.windowClickUnlisten()
             if (options.focusButtonOnClose) {
-                this.focusButton()
+                this.menuButton.focus()
             }
         } else {
             // open items panel
@@ -50,9 +50,6 @@ export class MenuDirective {
         }
     }
 
-    focusButton() {
-        this.menuButton.focus()
-    }
 
     focusItem(focusType: FocusType) {
         const activeItem = this.calculateFocusedItem(focusType)
@@ -78,7 +75,7 @@ export class MenuDirective {
         if (this.searchDebounce) {
             clearTimeout(this.searchDebounce)
         }
-        this.searchDebounce = setTimeout(() => this.clearSearch(), 350)
+        this.searchDebounce = setTimeout(() => this.searchQuery = '', 350)
 
         this.searchQuery += value.toLocaleLowerCase()
         const matchingItem = this.menuItems.find(
@@ -95,12 +92,10 @@ export class MenuDirective {
         this.focusItem({ kind: 'FocusSpecific', item: matchingItem })
     }
 
-    clearSearch() {
-        this.searchQuery = ''
-    }
 
     private calculateFocusedItem(focusType: FocusType): MenuItemDirective | null {
-        let items
+        const enabledItems = this.menuItems.filter(item => !item.hlMenuItemDisabled)
+
         switch (focusType.kind) {
             case 'FocusSpecific':
                 return focusType.item
@@ -108,22 +103,26 @@ export class MenuDirective {
             case 'FocusNothing':
                 return null
 
+            case 'FocusFirst':
+                return enabledItems[0]
+
+            case 'FocusLast':
+                return enabledItems[enabledItems.length - 1]
+
             case 'FocusNext':
-                items = this.menuItems.filter(item => !item.hlMenuItemDisabled)
                 if (this.activeItem === null) {
-                    return items[0]
+                    return enabledItems[0]
                 } else {
-                    const nextIndex = Math.min(items.indexOf(this.activeItem) + 1, items.length - 1)
-                    return items[nextIndex]
+                    const nextIndex = Math.min(enabledItems.indexOf(this.activeItem) + 1, enabledItems.length - 1)
+                    return enabledItems[nextIndex]
                 }
 
             case 'FocusPrevious':
-                items = this.menuItems.filter(item => !item.hlMenuItemDisabled)
                 if (this.activeItem === null) {
-                    return items[items.length - 1]
+                    return enabledItems[enabledItems.length - 1]
                 } else {
-                    const previousIndex = Math.max(items.indexOf(this.activeItem) - 1, 0)
-                    return items[previousIndex]
+                    const previousIndex = Math.max(enabledItems.indexOf(this.activeItem) - 1, 0)
+                    return enabledItems[previousIndex]
                 }
         }
     }
@@ -161,7 +160,7 @@ export class MenuButtonDirective implements OnInit {
 
     constructor(
         elementRef: ElementRef,
-        @Host() private menu: MenuDirective,
+        private menu: MenuDirective,
         private renderer: Renderer2) {
         this.element = elementRef.nativeElement
         menu.menuButton = this
@@ -224,7 +223,7 @@ export class MenuItemsPanelDirective {
     constructor(
         private templateRef: TemplateRef<any>,
         private viewContainerRef: ViewContainerRef,
-        @Host() private menu: MenuDirective,
+        private menu: MenuDirective,
         private renderer: Renderer2) {
         this.menu.menuItemsPanel = this
     }
@@ -284,13 +283,25 @@ export class MenuItemsPanelDirective {
                         this.menu.focusItem({ kind: 'FocusPrevious' })
                         break
 
-                    case 'Tab':
+                    case 'Home':
+                    case 'PageUp':
                         event.preventDefault()
+                        this.menu.focusItem({ kind: 'FocusFirst' })
+                        break
+
+                    case 'End':
+                    case 'PageDown':
+                        event.preventDefault()
+                        this.menu.focusItem({ kind: 'FocusLast' })
                         break
 
                     case 'Escape':
                         event.preventDefault()
                         this.menu.toggle()
+                        break
+
+                    case 'Tab':
+                        event.preventDefault()
                         break
 
                     default:
@@ -381,12 +392,16 @@ export class MenuItemDirective implements OnInit {
 }
 
 
+type FocusFirst = { kind: 'FocusFirst' }
+type FocusLast = { kind: 'FocusLast' }
 type FocusPrevious = { kind: 'FocusPrevious' }
 type FocusNext = { kind: 'FocusNext' }
 type FocusNothing = { kind: 'FocusNothing' }
 type FocusSpecific = { kind: 'FocusSpecific'; item: MenuItemDirective }
 
 type FocusType =
+    | FocusFirst
+    | FocusLast
     | FocusPrevious
     | FocusNext
     | FocusNothing
