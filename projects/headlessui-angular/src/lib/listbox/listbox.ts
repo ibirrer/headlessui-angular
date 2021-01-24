@@ -119,6 +119,13 @@ export class ListboxDirective<T> {
             case 'FocusSpecific':
                 return focusType.option
 
+            case 'FocusValue':
+                const option = this.listboxOptions.find((o => o.hlListboxOptionValue === focusType.value))
+                if (option) {
+                    return option
+                }
+                return null
+
             case 'FocusNothing':
                 return null
 
@@ -203,14 +210,26 @@ export class ListboxButtonDirective implements OnInit {
                         event.preventDefault()
                         this.listbox.toggle()
                         // delay focus until listbox option is initialized
-                        setTimeout(() => this.listbox.focusOption({ kind: 'FocusNext' }))
+                        setTimeout(() => {
+                            if (!this.listbox.value) {
+                                this.listbox.focusOption({ kind: 'FocusNext' })
+                            } else {
+                                this.listbox.focusOption({ kind: 'FocusValue', value: this.listbox.value })
+                            }
+                        })
                         break
 
                     case 'ArrowUp':
                         event.preventDefault()
                         this.listbox.toggle()
                         // delay focus until listbox option is initialized
-                        setTimeout(() => this.listbox.focusOption({ kind: 'FocusPrevious' }))
+                        setTimeout(() => {
+                            if (!this.listbox.value) {
+                                this.listbox.focusOption({ kind: 'FocusPrevious' })
+                            } else {
+                                this.listbox.focusOption({ kind: 'FocusValue', value: this.listbox.value })
+                            }
+                        })
                         break
                 }
             }
@@ -427,6 +446,7 @@ type FocusPrevious = { kind: 'FocusPrevious' }
 type FocusNext = { kind: 'FocusNext' }
 type FocusNothing = { kind: 'FocusNothing' }
 type FocusSpecific<T> = { kind: 'FocusSpecific'; option: ListboxOptionDirective<T> }
+type FocusValue<T> = { kind: 'FocusValue'; value: T }
 
 type FocusType<T> =
     | FocusFirst
@@ -435,6 +455,8 @@ type FocusType<T> =
     | FocusNext
     | FocusNothing
     | FocusSpecific<T>
+    | FocusValue<T>
+
 
 
 

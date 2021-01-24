@@ -105,8 +105,8 @@
                         <button hlListboxButton class="w-full">{{selectedPerson?.name}}</button>
                         <ul *hlListboxOptions>
                             <ng-container *ngFor="let person of people">
-                                <li *hlListboxOption="let option; value: person" [class.bg-blue-500]="option.active"
-                                    href="./#account-settings">
+                                <li *hlListboxOption="let option; value: person; disabled: person.unavailable"
+                                    [class.bg-blue-500]="option.active" href="./#account-settings">
                                     <span class="w-5 inline-block">
                                         <ng-container *ngIf="option.selected">✔</ng-container>
                                     </span>

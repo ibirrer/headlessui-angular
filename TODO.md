@@ -14,3 +14,5 @@
   - disabled menu items
 
 ## Listbox
+- [ ] aria properties
+- [x] focus selected on arrow down
