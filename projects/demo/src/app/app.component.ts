@@ -1,5 +1,5 @@
-import { animate, style, transition, trigger } from '@angular/animations';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { animate, style, transition, trigger } from '@angular/animations'
+import { ChangeDetectionStrategy, Component } from '@angular/core'
 
 
 @Component({
@@ -21,7 +21,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   ]
 })
 export class AppComponent {
-  title = 'demo';
+  title = 'demo'
 
   people: Person[] = [
     { id: 1, name: 'Durward Reynolds', unavailable: false },
@@ -29,12 +29,12 @@ export class AppComponent {
     { id: 3, name: 'Therese Wunsch', unavailable: false },
     { id: 4, name: 'Benedict Kessler', unavailable: true },
     { id: 5, name: 'Katelyn Rohan', unavailable: false },
-  ];
+  ]
 
-  selectedPerson: Person | null = this.people[0];
+  selectedPerson: Person | null = this.people[0]
 
   setSelectedPerson(person: Person | null) {
-    this.selectedPerson = person;
+    this.selectedPerson = person
   }
 }
 

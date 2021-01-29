@@ -58,6 +58,12 @@ describe('MenuTestComponent', () => {
   it('should be possible to navigate the menu with arrow down', fakeAsync(() => {
     arrowDown(menuButton())
     fixture.detectChanges()
+    tick(0, { processNewMacroTasksSynchronously: false })
+    fixture.detectChanges()
+    tick(0, { processNewMacroTasksSynchronously: false })
+    expect(menuItemsPanel().length).toBe(1)
+    tick()
+    fixture.detectChanges()
     expect(menuItemsPanel().length).toBe(1)
     expect(menuItems().length).toBe(3)
     expect(menuButton().attributes['aria-controls']).toBe('headlessui-menu-items-2')
@@ -71,16 +77,19 @@ describe('MenuTestComponent', () => {
     expect(menuItemsPanel()[0].attributes['aria-activedescendant']).toBe('headlessui-menu-item-3')
 
     arrowDown(menuItemsPanel()[0])
+    tick()
     fixture.detectChanges()
     expect(menuItemsState()).toEqual([false, true, false])
     expect(menuItemsPanel()[0].attributes['aria-activedescendant']).toBe('headlessui-menu-item-4')
 
     arrowDown(menuItemsPanel()[0])
+    tick()
     fixture.detectChanges()
     expect(menuItemsState()).toEqual([false, false, true])
     expect(menuItemsPanel()[0].attributes['aria-activedescendant']).toBe('headlessui-menu-item-5')
 
     arrowDown(menuItemsPanel()[0])
+    tick()
     fixture.detectChanges()
     expect(menuItemsState()).toEqual([false, false, true])
     expect(menuItemsPanel()[0].attributes['aria-activedescendant']).toBe('headlessui-menu-item-5')
@@ -89,6 +98,9 @@ describe('MenuTestComponent', () => {
   it('should be possible to navigate the menu with arrow up', fakeAsync(() => {
     arrowUp(menuButton())
     fixture.detectChanges()
+    tick(0, { processNewMacroTasksSynchronously: false })
+    fixture.detectChanges()
+    tick(0, { processNewMacroTasksSynchronously: false })
     expect(menuItemsPanel().length).toBe(1)
     expect(menuItems().length).toBe(3)
     expect(menuButton().attributes['aria-controls']).toBe('headlessui-menu-items-2')

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EmbeddedViewRef, Input, NgModule, OnInit, Renderer2, TemplateRef, ViewContainerRef } from '@angular/core'
+import { ChangeDetectorRef, Directive, ElementRef, EmbeddedViewRef, Input, NgModule, OnInit, Renderer2, TemplateRef, ViewContainerRef } from '@angular/core'
 import { generateId } from '../util'
 
 
@@ -7,9 +7,13 @@ import { generateId } from '../util'
 
 
 @Directive({
-    selector: '[hlMenu]'
+    selector: '[hlMenu]',
+    exportAs: 'hlMenu'
 })
 export class MenuDirective {
+    @Input()
+    static = false
+
     expanded = false
     windowClickUnlisten!: (() => void)
 
@@ -21,10 +25,11 @@ export class MenuDirective {
     searchDebounce: ReturnType<typeof setTimeout> | null = null
 
     constructor(
-        private renderer: Renderer2) {
+        private renderer: Renderer2,
+        private changeDetection: ChangeDetectorRef) {
     }
 
-    toggle(options = { focusButtonOnClose: true }) {
+    toggle(focusAfterExpand: FocusType | null = null, focusButtonOnClose = true) {
         if (this.expanded) {
             // close items panel
             this.expanded = false
@@ -34,19 +39,27 @@ export class MenuDirective {
             this.menuItems = []
             this.activeItem = null
             this.windowClickUnlisten()
-            if (options.focusButtonOnClose) {
+            if (focusButtonOnClose) {
                 this.menuButton.focus()
             }
+            this.changeDetection.markForCheck()
         } else {
             // open items panel
             this.expanded = true
-            this.menuItemsPanel.expand()
-            this.menuItemsPanel.focus()
-            if (this.menuItemsPanel.element != null) {
-                this.menuButton.element.setAttribute('aria-controls', this.menuItemsPanel.element.id)
-            }
-            this.menuButton.element.setAttribute('expanded', 'true')
-            this.windowClickUnlisten = this.initListeners()
+            this.changeDetection.markForCheck()
+
+            setTimeout(() => {
+                this.menuItemsPanel.expand()
+                this.menuItemsPanel.focus()
+                if (this.menuItemsPanel.element != null) {
+                    this.menuButton.element.setAttribute('aria-controls', this.menuItemsPanel.element.id)
+                }
+                this.menuButton.element.setAttribute('expanded', 'true')
+                this.windowClickUnlisten = this.initListeners()
+                if (focusAfterExpand) {
+                    setTimeout(() => this.focusItem(focusAfterExpand))
+                }
+            })
         }
     }
 
@@ -142,7 +155,7 @@ export class MenuDirective {
                 && active?.contains(target)
 
             // do not focus button if the clicked element is itself focusable
-            this.toggle({ focusButtonOnClose: !clickedTargetIsFocusable })
+            this.toggle(null, !clickedTargetIsFocusable)
         })
     }
 }
@@ -182,16 +195,12 @@ export class MenuButtonDirective implements OnInit {
                     case 'Enter':
                     case 'ArrowDown':
                         event.preventDefault()
-                        this.menu.toggle()
-                        // delay focus until menu item is initialized
-                        setTimeout(() => this.menu.focusItem({ kind: 'FocusNext' }))
+                        this.menu.toggle({ kind: 'FocusFirst' })
                         break
 
                     case 'ArrowUp':
                         event.preventDefault()
-                        this.menu.toggle()
-                        // delay focus until menu item is initialized
-                        setTimeout(() => this.menu.focusItem({ kind: 'FocusPrevious' }))
+                        this.menu.toggle({ kind: 'FocusLast' })
                         break
                 }
             }
@@ -217,10 +226,11 @@ export class MenuButtonDirective implements OnInit {
 @Directive({
     selector: '[hlMenuItems]'
 })
-export class MenuItemsPanelDirective {
+export class MenuItemsPanelDirective implements OnInit {
     element: HTMLElement | null = null
 
     constructor(
+
         private templateRef: TemplateRef<any>,
         private viewContainerRef: ViewContainerRef,
         private menu: MenuDirective,
@@ -228,22 +238,36 @@ export class MenuItemsPanelDirective {
         this.menu.menuItemsPanel = this
     }
 
+    ngOnInit(): void {
+        if (this.menu.static) {
+            this.expandInternal()
+        }
+    }
+
     expand() {
+        if (!this.menu.static) {
+            this.expandInternal()
+        }
+    }
+
+    collapse() {
+        if (!this.menu.static) {
+            this.viewContainerRef.clear()
+            this.element = null
+        }
+    }
+
+    focus() {
+        this.element?.focus({ preventScroll: true })
+    }
+
+    private expandInternal() {
         const view = this.viewContainerRef.createEmbeddedView(this.templateRef)
         const element = view.rootNodes[0]
         this.initAttributes(element)
         this.initListeners(element)
         this.element = element
         view.markForCheck()
-    }
-
-    collapse() {
-        this.viewContainerRef.clear()
-        this.element = null
-    }
-
-    focus() {
-        setTimeout(() => this.element?.focus({ preventScroll: true }))
     }
 
     private initAttributes(element: HTMLElement) {

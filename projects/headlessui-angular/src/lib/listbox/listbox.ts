@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EmbeddedViewRef, EventEmitter, Input, NgModule, OnInit, Output, Renderer2, TemplateRef, ViewContainerRef } from '@angular/core'
+import { ChangeDetectorRef, Directive, ElementRef, EmbeddedViewRef, EventEmitter, Input, NgModule, OnInit, Output, Renderer2, TemplateRef, ViewContainerRef } from '@angular/core'
 import { generateId } from '../util'
 
 
@@ -7,9 +7,13 @@ import { generateId } from '../util'
 
 
 @Directive({
-    selector: '[hlListbox]'
+    selector: '[hlListbox]',
+    exportAs: '[hlListbox]'
 })
 export class ListboxDirective<T> {
+    @Input()
+    static = false
+
     @Input()
     value: T | null = null
 
@@ -28,10 +32,11 @@ export class ListboxDirective<T> {
     searchDebounce: ReturnType<typeof setTimeout> | null = null
 
     constructor(
-        private renderer: Renderer2) {
+        private renderer: Renderer2,
+        private changeDetection: ChangeDetectorRef) {
     }
 
-    toggle(options = { focusButtonOnClose: true }) {
+    toggle(focusAfterExpand: FocusType<T> | null = null, focusButtonOnClose = true) {
         if (this.expanded) {
             // close options panel
             this.expanded = false
@@ -41,19 +46,27 @@ export class ListboxDirective<T> {
             this.listboxOptions = []
             this.activeOption = null
             this.windowClickUnlisten()
-            if (options.focusButtonOnClose) {
+            if (focusButtonOnClose) {
                 this.listboxButton.focus()
             }
+            this.changeDetection.markForCheck()
         } else {
             // open options panel
             this.expanded = true
-            this.listboxOptionsPanel.expand()
-            this.listboxOptionsPanel.focus()
-            if (this.listboxOptionsPanel.element != null) {
-                this.listboxButton.element.setAttribute('aria-controls', this.listboxOptionsPanel.element.id)
-            }
-            this.listboxButton.element.setAttribute('expanded', 'true')
-            this.windowClickUnlisten = this.initListeners()
+            this.changeDetection.markForCheck()
+
+            setTimeout(() => {
+                this.listboxOptionsPanel.expand()
+                this.listboxOptionsPanel.focus()
+                if (this.listboxOptionsPanel.element != null) {
+                    this.listboxButton.element.setAttribute('aria-controls', this.listboxOptionsPanel.element.id)
+                }
+                this.listboxButton.element.setAttribute('expanded', 'true')
+                this.windowClickUnlisten = this.initListeners()
+                if (focusAfterExpand) {
+                    setTimeout(() => this.focusOption(focusAfterExpand))
+                }
+            })
         }
     }
 
@@ -168,7 +181,7 @@ export class ListboxDirective<T> {
                 && active?.contains(target)
 
             // do not focus button if the clicked element is itself focusable
-            this.toggle({ focusButtonOnClose: !clickedTargetIsFocusable })
+            this.toggle(null, !clickedTargetIsFocusable)
         })
     }
 }
@@ -208,28 +221,20 @@ export class ListboxButtonDirective implements OnInit {
                     case 'Enter':
                     case 'ArrowDown':
                         event.preventDefault()
-                        this.listbox.toggle()
-                        // delay focus until listbox option is initialized
-                        setTimeout(() => {
-                            if (!this.listbox.value) {
-                                this.listbox.focusOption({ kind: 'FocusNext' })
-                            } else {
-                                this.listbox.focusOption({ kind: 'FocusValue', value: this.listbox.value })
-                            }
-                        })
+                        if (this.listbox.value) {
+                            this.listbox.toggle({ kind: 'FocusValue', value: this.listbox.value })
+                        } else {
+                            this.listbox.toggle({ kind: 'FocusFirst' })
+                        }
                         break
 
                     case 'ArrowUp':
                         event.preventDefault()
-                        this.listbox.toggle()
-                        // delay focus until listbox option is initialized
-                        setTimeout(() => {
-                            if (!this.listbox.value) {
-                                this.listbox.focusOption({ kind: 'FocusPrevious' })
-                            } else {
-                                this.listbox.focusOption({ kind: 'FocusValue', value: this.listbox.value })
-                            }
-                        })
+                        if (this.listbox.value) {
+                            this.listbox.toggle({ kind: 'FocusValue', value: this.listbox.value })
+                        } else {
+                            this.listbox.toggle({ kind: 'FocusPrevious' })
+                        }
                         break
                 }
             }
@@ -255,7 +260,7 @@ export class ListboxButtonDirective implements OnInit {
 @Directive({
     selector: '[hlListboxOptions]'
 })
-export class ListboxOptionsPanelDirective {
+export class ListboxOptionsPanelDirective implements OnInit {
     element: HTMLElement | null = null
 
     constructor(
@@ -266,22 +271,36 @@ export class ListboxOptionsPanelDirective {
         this.listbox.listboxOptionsPanel = this
     }
 
+    ngOnInit(): void {
+        if (this.listbox.static) {
+            this.expandInternal()
+        }
+    }
+
     expand() {
+        if (!this.listbox.static) {
+            this.expandInternal()
+        }
+    }
+
+    collapse() {
+        if (!this.listbox.static) {
+            this.viewContainerRef.clear()
+            this.element = null
+        }
+    }
+
+    focus() {
+        this.element?.focus({ preventScroll: true })
+    }
+
+    private expandInternal() {
         const view = this.viewContainerRef.createEmbeddedView(this.templateRef)
         const element = view.rootNodes[0]
         this.initAttributes(element)
         this.initListeners(element)
         this.element = element
         view.markForCheck()
-    }
-
-    collapse() {
-        this.viewContainerRef.clear()
-        this.element = null
-    }
-
-    focus() {
-        setTimeout(() => this.element?.focus({ preventScroll: true }))
     }
 
     private initAttributes(element: HTMLElement) {
