@@ -1,4 +1,4 @@
-npm run build:lib
+npm run build
 npm version patch
 cd dist/headlessui-angular
 npm version patch
