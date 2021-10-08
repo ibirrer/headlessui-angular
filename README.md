@@ -1,11 +1,10 @@
 # headlessui-angular
 
-A set of completely unstyled, fully accessible UI components for Angular based on [headlessui](https://headlessui.dev). Designed to integrate beautifully with Tailwind CSS.
-
+An attempt to bring [headlessui](https://headlessui.dev) to Angular. A set of completely unstyled, fully accessible UI components.
 
 ## Installation
 
-_Tested with Angular 11 only._
+_Tested with Angular 12._
 
 ```sh
 # npm
@@ -21,7 +20,6 @@ _This project is still in early development. So far, only the menu button compon
 
 - [Menu Button (Dropdown)](#menu-button-dropdown)
 
-
 ## Menu Button (Dropdown)
 
 [View live demo on StackBlitz](https://stackblitz.com/edit/tailwind-1sybvr?file=src/app/app.component.html)
@@ -32,21 +30,28 @@ Menu Buttons are built using the `hlMenu`, `hlMenuButton`, `*hlMenuItems`, and `
 
 The menu button `*hlMenuButton` will automatically open/close the `*hlMenuItems` when clicked, and when the menu is open, the list of items receives focus and is automatically navigable via the keyboard.
 
-
 ```html
 <div hlMenu>
   <button hlMenuButton class="w-full">More</button>
   <div *hlMenuItems>
-    <a *hlMenuItem="let item" [class.bg-blue-500]="item.active" href="./#account-settings">
+    <a
+      *hlMenuItem="let item"
+      [class.bg-blue-500]="item.active"
+      href="./#account-settings"
+    >
       Account settings
     </a>
-    <a *hlMenuItem="let item" [class.bg-blue-500]="item.active" href="./#documentation">
+    <a
+      *hlMenuItem="let item"
+      [class.bg-blue-500]="item.active"
+      href="./#documentation"
+    >
       Documentation
     </a>
     <span *hlMenuItem="let item; disabled: true">
       Invite a friend (coming soon!)
     </span>
-    </div>
+  </div>
 </div>
 ```
 
@@ -64,7 +69,7 @@ You can use this state to conditionally apply whatever active/focus styles you l
   <div *hlMenuItems>
     <!-- Use the `active` state to conditionally style the active item. -->
     <a *hlMenuItem="let item"
-       [class]="item.active ? 'bg-blue-500 text-white' : 'bg-white text-black'" 
+       [class]="item.active ? 'bg-blue-500 text-white' : 'bg-white text-black'"
        href="#settings">
       Settings
     </a>
@@ -78,33 +83,23 @@ To animate the opening/closing of the menu panel, use Angular's built-in animati
 
 ```html
 @Component({
-  <!-- ... -->
-  template:
-    `<div hlMenu>
-        <button hlMenuButton>Trigger</button>
-        <!-- add the animation to the *hlMenuItems element -->
-        <div *hlMenuItems @toggleAnimation>
-            <a *hlMenuItem>Item A</a>
-        </div>
-    </div>`
-  animations: [
-    trigger('toggleAnimation', [
-      transition(':enter',
-        [
-          style({ opacity: 0, transform: 'scale(0.95)' }),
-          animate('100ms ease-out', style({ opacity: 1, transform: 'scale(1)' })),
-        ]),
-      transition(':leave',
-        [
-          animate('75ms', style({ opacity: 0, transform: 'scale(0.95)' })),
-        ]),
-    ]),
-  ]
-})
+<!-- ... -->
+template: `
+<div hlMenu>
+  <button hlMenuButton>Trigger</button>
+  <!-- add the animation to the *hlMenuItems element -->
+  <div *hlMenuItems @toggleAnimation>
+    <a *hlMenuItem>Item A</a>
+  </div>
+</div>
+` animations: [ trigger('toggleAnimation', [ transition(':enter', [ style({
+opacity: 0, transform: 'scale(0.95)' }), animate('100ms ease-out', style({
+opacity: 1, transform: 'scale(1)' })), ]), transition(':leave', [
+animate('75ms', style({ opacity: 0, transform: 'scale(0.95)' })), ]), ]), ] })
 ```
 
-
 ## Develop
+
 ```sh
 git clone https://github.com/ibirrer/headlessui-angular.git
 cd headlessui-angular
