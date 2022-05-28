@@ -1,7 +1,19 @@
+echo "update package version"
+npm version patch --no-git-tag-version
+new_version=$(npm pkg get version | sed 's/"//g')
+npm --prefix projects/headlessui-angular version --no-git-tag-version "$new_version"
+
+echo "build and test"
 npm run build
-npm version patch
+npm run build:demo
+npm run test:ci
+
+echo "commit and tag"
+git commit -am v"$new_version"
+git tag v"$new_version"
+
+echo "publish"
 cd dist/headlessui-angular
-npm version patch
-git add . && git commit --amend
 npm login
 npm publish
+
