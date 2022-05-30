@@ -45,6 +45,7 @@
     "cpy-cli": "~4",
     "cross-env": "~7",
     "eslint": "~7",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "~2",
     "eslint-plugin-jsdoc": "~36",
     "eslint-plugin-prefer-arrow": "~1",
@@ -56,6 +57,7 @@
     "karma-jasmine-html-reporter": "~1",
     "ng-packagr": "~13",
     "postcss": "~8",
+    "prettier": "~2",
     "puppeteer": "~14",
     "tailwindcss": "~3",
     "typescript": "~4.4"
