@@ -1,6 +1,5 @@
-import { animate, style, transition, trigger } from '@angular/animations'
-import { ChangeDetectionStrategy, Component } from '@angular/core'
-
+import { animate, style, transition, trigger } from '@angular/animations';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -8,20 +7,18 @@ import { ChangeDetectionStrategy, Component } from '@angular/core'
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('toggleAnimation', [
-      transition(':enter',
-        [
-          style({ opacity: 0, transform: 'scale(0.95)' }),
-          animate('100ms ease-out', style({ opacity: 1, transform: 'scale(1)' })),
-        ]),
-      transition(':leave',
-        [
-          animate('75ms', style({ opacity: 0, transform: 'scale(0.95)' })),
-        ]),
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0.95)' }),
+        animate('100ms ease-out', style({ opacity: 1, transform: 'scale(1)' })),
+      ]),
+      transition(':leave', [
+        animate('75ms', style({ opacity: 0, transform: 'scale(0.95)' })),
+      ]),
     ]),
-  ]
+  ],
 })
 export class AppComponent {
-  title = 'demo'
+  title = 'demo';
 
   people: Person[] = [
     { id: 1, name: 'Durward Reynolds', unavailable: false },
@@ -29,12 +26,12 @@ export class AppComponent {
     { id: 3, name: 'Therese Wunsch', unavailable: false },
     { id: 4, name: 'Benedict Kessler', unavailable: true },
     { id: 5, name: 'Katelyn Rohan', unavailable: false },
-  ]
+  ];
 
-  selectedPerson: Person | null = this.people[0]
+  selectedPerson: Person | null = this.people[0];
 
   setSelectedPerson(person: Person | null) {
-    this.selectedPerson = person
+    this.selectedPerson = person;
   }
 }
 

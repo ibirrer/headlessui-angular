@@ -25,15 +25,13 @@ _This project is still in early development. So far, only the menu button compon
 [View live demo on StackBlitz](https://stackblitz.com/edit/tailwind-1sybvr?file=src/app/app.component.html)
 
 ### Setup
+
 Import `MenuModule` to your angular module:
 
 ```ts
 import { MenuModule } from "headlessui-angular";
-imports: [
-  MenuModule
-]
+imports: [MenuModule];
 ```
-
 
 ### Basic example
 
