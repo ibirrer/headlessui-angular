@@ -1,16 +1,28 @@
 import {
+  ConnectedPosition,
+  FlexibleConnectedPositionStrategy,
+  Overlay,
+  OverlayConfig,
+  OverlayModule,
+  OverlayRef,
+  RepositionScrollStrategy,
+} from '@angular/cdk/overlay';
+import {
   ChangeDetectorRef,
   Directive,
   ElementRef,
   EmbeddedViewRef,
   Input,
   NgModule,
+  OnDestroy,
   OnInit,
   Renderer2,
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
 import { generateId } from '../util';
+import { TemplatePortal } from '@angular/cdk/portal';
+import { ChangeDetection } from '@angular/cli/lib/config/workspace-schema';
 
 /// MENU - Spec: https://www.w3.org/TR/wai-aria-practices-1.2/#menubutton
 
@@ -236,14 +248,18 @@ export class MenuButtonDirective implements OnInit {
 @Directive({
   selector: '[hlMenuItems]',
 })
-export class MenuItemsPanelDirective implements OnInit {
+export class MenuItemsPanelDirective implements OnInit, OnDestroy {
   element: HTMLElement | null = null;
+  overlayRef?: OverlayRef;
+  portal?: TemplatePortal;
 
   constructor(
     private templateRef: TemplateRef<any>,
     private viewContainerRef: ViewContainerRef,
     private menu: MenuDirective,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private overlay: Overlay,
+    private changeDetection: ChangeDetectorRef
   ) {
     this.menu.menuItemsPanel = this;
   }
@@ -251,6 +267,13 @@ export class MenuItemsPanelDirective implements OnInit {
   ngOnInit(): void {
     if (this.menu.static) {
       this.expandInternal();
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.overlayRef) {
+      this.overlayRef.dispose();
+      this.overlayRef = undefined;
     }
   }
 
@@ -262,8 +285,12 @@ export class MenuItemsPanelDirective implements OnInit {
 
   collapse() {
     if (!this.menu.static) {
-      this.viewContainerRef.clear();
       this.element = null;
+      this.overlayRef?.detach();
+      this.overlayRef?.dispose();
+      this.viewContainerRef.clear();
+      this.overlayRef = undefined;
+      this.portal = undefined;
     }
   }
 
@@ -272,12 +299,61 @@ export class MenuItemsPanelDirective implements OnInit {
   }
 
   private expandInternal() {
-    const view = this.viewContainerRef.createEmbeddedView(this.templateRef);
-    const element = view.rootNodes[0];
-    this.initAttributes(element);
-    this.initListeners(element);
-    this.element = element;
-    view.markForCheck();
+    // const view = this.viewContainerRef.createEmbeddedView(this.templateRef);
+    // const element = view.rootNodes[0];
+    if (!this.portal) {
+      this.portal = new TemplatePortal(this.templateRef, this.viewContainerRef);
+    }
+
+    if (!this.overlayRef) {
+      const defaultPositionList: ConnectedPosition[] = [
+        {
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top',
+        },
+        {
+          originX: 'start',
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'bottom',
+        },
+        {
+          originX: 'end',
+          originY: 'top',
+          overlayX: 'end',
+          overlayY: 'bottom',
+        },
+        {
+          originX: 'end',
+          originY: 'bottom',
+          overlayX: 'end',
+          overlayY: 'top',
+        },
+      ];
+
+      const config = new OverlayConfig({
+        positionStrategy: this.overlay
+          .position()
+          .flexibleConnectedTo(this.menu.menuButton.element)
+          .withPositions(defaultPositionList)
+          .withLockedPosition()
+          .withGrowAfterOpen(),
+        backdropClass: 'cdk-overlay-transparent-backdrop',
+        panelClass: '',
+        scrollStrategy: this.overlay.scrollStrategies.noop(),
+        direction: 'ltr',
+      });
+      this.overlayRef = this.overlay.create(config);
+    }
+    this.overlayRef.attach(this.portal);
+    this.element = this.overlayRef.overlayElement
+      .firstElementChild as HTMLElement;
+    this.initAttributes(this.element);
+    this.initListeners(this.element);
+    this.changeDetection.markForCheck();
+    // view.markForCheck();
   }
 
   private initAttributes(element: HTMLElement) {
@@ -433,6 +509,7 @@ type FocusType =
     MenuButtonDirective,
     MenuItemsPanelDirective,
     MenuItemDirective,
+    OverlayModule,
   ],
   declarations: [
     MenuDirective,

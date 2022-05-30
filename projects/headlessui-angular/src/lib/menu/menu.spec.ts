@@ -18,6 +18,7 @@ import {
   MenuItemDirective,
   MenuItemsPanelDirective,
 } from './menu';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 describe('MenuTestComponent', () => {
   let component: MenuTestComponent;
@@ -32,6 +33,7 @@ describe('MenuTestComponent', () => {
         MenuItemsPanelDirective,
         MenuItemDirective,
       ],
+      imports: [OverlayModule],
     }).compileComponents();
   });
 
