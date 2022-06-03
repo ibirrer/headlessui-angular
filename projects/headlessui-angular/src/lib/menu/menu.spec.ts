@@ -1,4 +1,3 @@
-/* eslint-disable prefer-arrow/prefer-arrow-functions */
 import {
   ChangeDetectionStrategy,
   Component,
@@ -43,7 +42,7 @@ describe('MenuTestComponent', () => {
   });
 
   it('should be possible to render a Menu without crashing', () => {
-    expect(menuButton().attributes.id).toBe('headlessui-menu-button-1');
+    expect(menuButton().attributes['id']).toBe('headlessui-menu-button-1');
     expect(menuItems().length).toBe(0);
     expect(menuItemsPanel().length).toBe(0);
   });
@@ -57,13 +56,13 @@ describe('MenuTestComponent', () => {
     expect(menuButton().attributes['aria-controls']).toBe(
       'headlessui-menu-items-2'
     );
-    expect(menuButton().attributes.expanded).toBe('true');
+    expect(menuButton().attributes['expanded']).toBe('true');
     click(menuButton());
     tick();
     expect(menuItems().length).toBe(0);
     expect(menuItemsPanel().length).toBe(0);
     expect(menuButton().attributes['aria-controls']).toBeUndefined();
-    expect(menuButton().attributes.expanded).toBeUndefined();
+    expect(menuButton().attributes['expanded']).toBeUndefined();
   }));
 
   it('should be possible to navigate the menu with arrow down', fakeAsync(() => {
@@ -80,7 +79,7 @@ describe('MenuTestComponent', () => {
     expect(menuButton().attributes['aria-controls']).toBe(
       'headlessui-menu-items-2'
     );
-    expect(menuButton().attributes.expanded).toBe('true');
+    expect(menuButton().attributes['expanded']).toBe('true');
 
     // run delayed focus of first element
     tick();
@@ -127,7 +126,7 @@ describe('MenuTestComponent', () => {
     expect(menuButton().attributes['aria-controls']).toBe(
       'headlessui-menu-items-2'
     );
-    expect(menuButton().attributes.expanded).toBe('true');
+    expect(menuButton().attributes['expanded']).toBe('true');
 
     // run delayed focus of first element
     tick();
