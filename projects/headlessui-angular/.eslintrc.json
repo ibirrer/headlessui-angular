@@ -5,7 +5,7 @@
     {
       "files": ["*.ts"],
       "parserOptions": {
-        "project": ["./tsconfig.lib.json", "./tsconfig.spec.json"],
+        "project": ["./projects/headlessui-angular/tsconfig.lib.json", "./projects/headlessui-angular/tsconfig.spec.json"],
         "createDefaultProgram": true
       },
       "rules": {
