@@ -4,8 +4,6 @@ An attempt to bring [headlessui](https://headlessui.dev) to Angular. A set of co
 
 ## Installation
 
-_Tested with Angular 12._
-
 ```sh
 # npm
 npm install headlessui-angular
