@@ -18,7 +18,7 @@ jobs:
       - run: npm run lint
       - run: npm run test:ci
       - run: npm run build
-      - run: npm run build:demo
+      - run: npm run build:demo -- --base-href /headlessui-angular/
         env:
           CI: true
 
