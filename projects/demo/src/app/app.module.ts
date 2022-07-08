@@ -5,9 +5,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ListboxModule } from 'projects/headlessui-angular/src/lib/listbox/listbox';
 import { MenuModule } from 'projects/headlessui-angular/src/public-api';
 import { AppComponent } from './app.component';
+import { DemoContainerComponent } from './demo-container/demo-container.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, DemoContainerComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

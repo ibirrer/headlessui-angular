@@ -16,11 +16,11 @@ yarn add headlessui-angular
 
 _This project is still in early development. So far, only the menu button component is available. Also expect the API to change._
 
-- [Menu Button (Dropdown)](#menu-button-dropdown)
+- [Dropdown (Menu)](#menu-button-dropdown)
 
 ## Menu Button (Dropdown)
 
-[View live demo on StackBlitz](https://stackblitz.com/edit/tailwind-1sybvr?file=src/app/app.component.html)
+[Demo](https://ibirrer.github.io/headlessui-angular/)
 
 ### Setup
 
