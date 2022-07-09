@@ -14,13 +14,19 @@ yarn add headlessui-angular
 
 ## Components
 
-_This project is still in early development. So far, only the menu button component is available. Also expect the API to change._
+_This project is still in early development. So far, only the menu and 
+listbox component are available._
 
-- [Dropdown (Menu)](#menu-button-dropdown)
+- [Menu (Dropdown)](#menu-dropdown)
+- [Listbox (Select) - Draft](#listbox-select)
 
-## Menu Button (Dropdown)
+## Menu (Dropdown)
 
-[Demo](https://ibirrer.github.io/headlessui-angular/)
+[Demo](https://ibirrer.github.io/headlessui-angular/#menu)
+
+From the [ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/patterns/menu/): _"A menu is a widget that offers a list of choices to the user, such as a set of actions.
+Menu widgets behave like native operating system menus, such as the menus
+that pull down from the menubars."_
 
 ### Setup
 
@@ -33,7 +39,7 @@ imports: [MenuModule];
 
 ### Basic example
 
-Menu Buttons are built using the `hlMenu`, `hlMenuButton`, `*hlMenuItems`, and `*hlMenuItem` directives.
+Menus are built using the `hlMenu`, `hlMenuButton`, `*hlMenuItems`, and `*hlMenuItem` directives.
 
 The menu button `*hlMenuButton` will automatically open/close the `*hlMenuItems` when clicked, and when the menu is open, the list of items receives focus and is automatically navigable via the keyboard.
 
@@ -66,7 +72,7 @@ The menu button `*hlMenuButton` will automatically open/close the `*hlMenuItems`
 
 This is a headless component so there are no styles included by default. Instead, the components expose useful information via let expressions that you can use to apply the styles you'd like to apply yourself.
 
-To style the active `hlMenuItem` you can read the `active` state, which tells you whether or not that menu item is the item that is currently focused via the mouse or keyboard.
+To style the active `hlMenuItem` you can read the `active` state, which tells you whether that menu item is the item that is currently focused via the mouse or keyboard.
 
 You can use this state to conditionally apply whatever active/focus styles you like, for instance a blue background like is typical in most operating systems.
 
@@ -103,6 +109,25 @@ template: `
 opacity: 0, transform: 'scale(0.95)' }), animate('100ms ease-out', style({
 opacity: 1, transform: 'scale(1)' })), ]), transition(':leave', [
 animate('75ms', style({ opacity: 0, transform: 'scale(0.95)' })), ]), ]), ] })
+```
+
+## Listbox (Select)
+DRAFT
+
+From the [ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/patterns/listbox/): _"A listbox widget presents a list of options and allows a user to select 
+one or more of them."_
+
+
+
+[Demo](https://ibirrer.github.io/headlessui-angular/#listbox)
+
+### Setup
+
+Import `ListboxModule` to your angular module:
+
+```ts
+import { ListboxModule } from "headlessui-angular";
+imports: [ListboxModule];
 ```
 
 ## Develop

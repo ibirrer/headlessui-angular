@@ -1,5 +1,19 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Inject,
+  Renderer2,
+} from '@angular/core';
+import * as formattedSources from './formattedSources';
+import {
+  DOCUMENT,
+  Location,
+  LocationStrategy,
+  PathLocationStrategy,
+} from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -17,26 +31,18 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
     ]),
   ],
 })
-export class AppComponent {
-  title = 'demo';
+export class AppComponent implements AfterViewInit {
+  formattedSources = formattedSources;
 
-  people: Person[] = [
-    { id: 1, name: 'Durward Reynolds', unavailable: false },
-    { id: 2, name: 'Kenton Towne', unavailable: false },
-    { id: 3, name: 'Therese Wunsch', unavailable: false },
-    { id: 4, name: 'Benedict Kessler', unavailable: true },
-    { id: 5, name: 'Katelyn Rohan', unavailable: false },
-  ];
+  constructor(
+    private location: Location,
+    @Inject(DOCUMENT) private document: Document
+  ) {}
 
-  selectedPerson: Person | null = this.people[0];
-
-  setSelectedPerson(person: Person | null) {
-    this.selectedPerson = person;
+  ngAfterViewInit(): void {
+    const element = this.document.getElementById(this.location.path());
+    setTimeout(() => {
+      element?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   }
-}
-
-interface Person {
-  id: number;
-  name: string;
-  unavailable: boolean;
 }

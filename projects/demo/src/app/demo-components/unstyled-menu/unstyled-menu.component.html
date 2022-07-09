@@ -1,0 +1,24 @@
+<div hlMenu>
+  <button hlMenuButton class="w-full">More</button>
+  <div *hlMenuItems>
+    <a
+      *hlMenuItem="let item"
+      class="block"
+      [class.bg-blue-500]="item.active"
+      href="./#account-settings"
+    >
+      Account settings
+    </a>
+    <a
+      *hlMenuItem="let item"
+      class="block"
+      [class.bg-blue-500]="item.active"
+      href="./#account-settings"
+    >
+      Documentation
+    </a>
+    <span *hlMenuItem="let item; disabled: true" class="block">
+      Invite a friend (coming soon!)
+    </span>
+  </div>
+</div>
