@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { generateId } from '../util';
 
-/// LISTBOX - Spec: https://www.w3.org/TR/wai-aria-practices-1.2/#Listbox
+/// LISTBOX - Spec: https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
 
 @Directive({
   selector: '[hlListbox]',

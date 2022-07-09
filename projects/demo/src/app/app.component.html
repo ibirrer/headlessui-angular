@@ -1,270 +1,61 @@
-<div class="mt-12 mb-36 max-w-4xl mx-auto px-8">
-  <h1 class="text-2xl font-bold mb-12 text-gray-700">Dropdown (Menu)</h1>
+<div class="mt-12 mb-36 max-w-6xl mx-auto px-4 lg:px-8">
+  <h1 id="menu" class="text-2xl font-bold mb-12 text-gray-700 scroll-mt-6">
+    Menu
+  </h1>
   <div class="space-y-20">
-    <!-- Styled dropdown -->
-    <app-demo-container name="Styled dropdown" class="block h-96">
-      <div hlMenu>
-        <span class="rounded-md shadow-sm">
-          <button
-            hlMenuButton
-            class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800"
-          >
-            <span>Options</span>
-            <svg
-              class="w-5 h-5 ml-2 -mr-1"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
-          </button>
-        </span>
-
-        <div
-          *hlMenuItems
-          @toggleAnimation
-          class="absolute right-0 w-56 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
-        >
-          <div class="px-4 py-3">
-            <p class="text-sm leading-5">Signed in as</p>
-            <p class="text-sm font-medium leading-5 text-gray-900 truncate">
-              tom@example.com
-            </p>
-          </div>
-          <div class="py-1">
-            <a
-              *hlMenuItem="let item"
-              href="./#account-settings"
-              [class]="
-                item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-              "
-              class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
-            >
-              Account settings
-            </a>
-
-            <a
-              *hlMenuItem="let item"
-              href="./#support"
-              [class]="
-                item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-              "
-              class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
-            >
-              Support
-            </a>
-
-            <span
-              *hlMenuItem="let item; disabled: true"
-              class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left text-gray-700 cursor-not-allowed opacity-50"
-            >
-              New feature (soon)
-            </span>
-
-            <a
-              *hlMenuItem="let item"
-              href="./#license"
-              [class]="
-                item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-              "
-              class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
-            >
-              License
-            </a>
-          </div>
-
-          <div class="py-1">
-            <a
-              *hlMenuItem="let item"
-              href="./#sign-out"
-              [class]="
-                item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-              "
-              class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
-            >
-              Sign out
-            </a>
-          </div>
-        </div>
-      </div>
-    </app-demo-container>
-
-    <!-- Styled dropdown using angular cdk overlay: https://material.angular.io/cdk/overlay/overview -->
+    <!-- Styled Menu -->
     <app-demo-container
-      name="Styled dropdown using Angular CDK Overlay"
-      class="block h-96"
+      name="Styled"
+      [htmlSource]="formattedSources.styledMenuHtml"
+      [typescriptSource]="formattedSources.styledMenuTypescript"
     >
-      <div class="relative inline-block text-left">
-        <div
-          hlMenu
-          [static]="true"
-          #menu="hlMenu"
-          cdkOverlayOrigin
-          #trigger="cdkOverlayOrigin"
-        >
-          <span class="rounded-md shadow-sm">
-            <button
-              hlMenuButton
-              class="inline-flex justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-gray-700 transition duration-150 ease-in-out bg-white border border-gray-300 rounded-md hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800"
-            >
-              <span>Options</span>
-              <svg
-                class="w-5 h-5 ml-2 -mr-1"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </button>
-          </span>
-          <ng-template
-            cdkConnectedOverlay
-            [cdkConnectedOverlayOrigin]="trigger"
-            [cdkConnectedOverlayOpen]="menu.expanded"
-          >
-            <div
-              id="m1"
-              *hlMenuItems
-              class="w-56 mt-2 mb-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
-            >
-              <div class="px-4 py-3">
-                <p class="text-sm leading-5">Signed in as</p>
-                <p class="text-sm font-medium leading-5 text-gray-900 truncate">
-                  tom@example.com
-                </p>
-              </div>
-              <div class="py-1">
-                <a
-                  *hlMenuItem="let item"
-                  href="./#account-settings"
-                  [class]="
-                    item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                  "
-                  class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
-                >
-                  Account settings
-                </a>
-
-                <a
-                  *hlMenuItem="let item"
-                  href="./#support"
-                  [class]="
-                    item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                  "
-                  class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
-                >
-                  Support
-                </a>
-
-                <span
-                  *hlMenuItem="let item; disabled: true"
-                  class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left text-gray-700 cursor-not-allowed opacity-50"
-                >
-                  New feature (soon)
-                </span>
-
-                <a
-                  *hlMenuItem="let item"
-                  href="./#license"
-                  [class]="
-                    item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                  "
-                  class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
-                >
-                  License
-                </a>
-              </div>
-
-              <div class="py-1">
-                <a
-                  *hlMenuItem="let item"
-                  href="./#sign-out"
-                  [class]="
-                    item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                  "
-                  class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
-                >
-                  Sign out
-                </a>
-              </div>
-            </div>
-          </ng-template>
-        </div>
-      </div>
+      <app-styled-menu></app-styled-menu>
     </app-demo-container>
 
-    <!-- Unstyled dropdown -->
-    <app-demo-container name="Unstyled dropdown" class="block h-52">
-      <div hlMenu>
-        <button hlMenuButton class="w-full">More</button>
-        <div *hlMenuItems>
-          <a
-            *hlMenuItem="let item"
-            class="block"
-            [class.bg-blue-500]="item.active"
-            href="./#account-settings"
-          >
-            Account settings
-          </a>
-          <a
-            *hlMenuItem="let item"
-            class="block"
-            [class.bg-blue-500]="item.active"
-            href="./#account-settings"
-          >
-            Documentation
-          </a>
-          <span *hlMenuItem="let item; disabled: true" class="block">
-            Invite a friend (coming soon!)
-          </span>
-        </div>
-      </div>
+    <!-- Styled Menu using angular cdk overlay: https://material.angular.io/cdk/overlay/overview -->
+    <app-demo-container
+      name="Styled using Angular CDK Overlay"
+      [htmlSource]="formattedSources.styledMenuCdkHtml"
+      [typescriptSource]="formattedSources.styledMenuCdkTypescript"
+    >
+      <app-styled-menu-cdk></app-styled-menu-cdk>
+    </app-demo-container>
+
+    <!-- Unstyled Menu -->
+    <app-demo-container
+      name="Minimal Styles"
+      [htmlSource]="formattedSources.unstyledMenuHtml"
+      [typescriptSource]="formattedSources.unstyledMenuTypescript"
+    >
+      <app-unstyled-menu></app-unstyled-menu>
     </app-demo-container>
   </div>
 
-  <h1 class="text-2xl font-bold mb-8 text-gray-700 mt-28">
+  <h1
+    id="listbox"
+    class="text-2xl font-bold mb-8 text-gray-700 mt-28 scroll-mt-12"
+  >
     Select (Listbox)
     <p class="text-gray-400 text-base font-normal">Draft</p>
   </h1>
 
   <div class="space-y-20">
-    <!-- Unstyled select -->
-    <app-demo-container name="Not Styled" class="block h-52">
-      <div
-        hlListbox
-        [value]="selectedPerson"
-        (valueChange)="setSelectedPerson($event)"
-      >
-        <button hlListboxButton class="w-full">
-          {{ selectedPerson?.name }}
-        </button>
-        <ul *hlListboxOptions>
-          <ng-container *ngFor="let person of people">
-            <li
-              *hlListboxOption="
-                let option;
-                value: person;
-                disabled: person.unavailable
-              "
-              [class.bg-blue-500]="option.active"
-              href="./#account-settings"
-            >
-              <span class="w-5 inline-block">
-                <ng-container *ngIf="option.selected">✔</ng-container>
-              </span>
-              {{ person.name }}
-            </li>
-          </ng-container>
-        </ul>
-      </div>
+    <!-- Styled Select -->
+    <app-demo-container
+      name="Styled"
+      [htmlSource]="formattedSources.styledSelectHtml"
+      [typescriptSource]="formattedSources.styledSelectTypescript"
+    >
+      <app-styled-select></app-styled-select>
+    </app-demo-container>
+
+    <!-- Unstyled Select -->
+    <app-demo-container
+      name="Minimal Styles"
+      [htmlSource]="formattedSources.unstyledSelectHtml"
+      [typescriptSource]="formattedSources.unstyledSelectTypescript"
+    >
+      <app-unstyled-select></app-unstyled-select>
     </app-demo-container>
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, HostBinding, Input } from '@angular/core';
 
 @Component({
   selector: 'app-demo-container',
@@ -6,4 +6,9 @@ import { Component, Input } from '@angular/core';
 })
 export class DemoContainerComponent {
   @Input() name!: string;
+  @Input() htmlSource!: string;
+  @Input() typescriptSource!: string;
+  display: 'Preview' | 'Html' | 'Typescript' = 'Preview';
+
+  @HostBinding('class') hostStyle = 'block';
 }

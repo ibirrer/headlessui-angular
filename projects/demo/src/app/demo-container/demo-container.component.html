@@ -1,9 +1,78 @@
-<div class="h-full">
-  <h2 class="text-gray-700 mb-3">{{ name }}</h2>
+<!-- TITLE -->
+<div class="flex mb-3 items-center justify-between">
+  <h2 class="text-gray-700">{{ name }}</h2>
+
+  <!-- TAB BUTTONS -->
+  <div class="flex space-x-2">
+    <button
+      class="px-3 py-1.5 rounded text-sm hover:bg-gray-200 lg:w-24 text-center"
+      [ngClass]="{
+        'bg-gray-200 text-gray-800': display === 'Preview',
+        'text-gray-600': display !== 'Preview'
+      }"
+      (click)="display = 'Preview'"
+    >
+      Preview
+    </button>
+
+    <button
+      class="px-3 py-1.5 rounded text-sm hover:bg-gray-200 lg:w-24 text-center"
+      [ngClass]="{
+        'bg-gray-200 text-gray-800': display === 'Html',
+        'text-gray-600': display !== 'Html'
+      }"
+      (click)="display = 'Html'"
+    >
+      HTML
+    </button>
+
+    <button
+      class="px-3 py-1.5 rounded text-sm hover:bg-gray-200 lg:w-16 text-center"
+      [ngClass]="{
+        'bg-gray-200 text-gray-800': display === 'Typescript',
+        'text-gray-600': display !== 'Typescript'
+      }"
+      (click)="display = 'Typescript'"
+    >
+      TS
+    </button>
+  </div>
+</div>
+
+<div
+  class="h-96 relative px-4 rounded-lg border border-gray-200 bg-gray-100 p-8"
+  [ngClass]="{
+    'px-0 pb-0 pt-0 h-[600px] overflow-hidden': display !== 'Preview'
+  }"
+>
   <div
-    class="flex justify-center px-4 border border-gray-200 p-5 bg-gray-100 rounded-lg h-full">
-    <div class="relative inline-block text-left">
-      <ng-content></ng-content>
+    class="h-full"
+    [ngClass]="{
+      'overflow-auto bg-gray-50': display !== 'Preview'
+    }"
+  >
+    <!-- PREVIEW -->
+    <div class="flex justify-center">
+      <div
+        class="relative inline-block text-left"
+        *ngIf="display === 'Preview'"
+      >
+        <ng-content></ng-content>
+      </div>
+    </div>
+
+    <!-- HTML -->
+    <div *ngIf="display === 'Html'" class="p-5">
+      <div>
+        <pre><code class="language-html"><span [innerHTML]="htmlSource"></span></code></pre>
+      </div>
+    </div>
+
+    <!-- TYPESCRIPT -->
+    <div *ngIf="display === 'Typescript'" class="p-5">
+      <div>
+        <pre><code class="language-javascript"><span [innerHTML]="typescriptSource"></span></code></pre>
+      </div>
     </div>
   </div>
 </div>

@@ -1,0 +1,59 @@
+<div
+  hlListbox
+  [value]="selectedPerson"
+  (valueChange)="setSelectedPerson($event)"
+>
+  <div class="relative w-72">
+    <button
+      hlListboxButton
+      class="relative w-full cursor-default rounded-md bg-white py-2 pl-3 pr-10 text-left border border-gray-300 focus:outline-none focus-visible:border-gray-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-blue-300 sm:text-sm"
+    >
+      <span class="block truncate">{{ selectedPerson?.name }}</span>
+      <span
+        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
+      >
+        <ng-icon
+          name="hero-selector"
+          class="text-xl text-gray-400"
+          aria-hidden="true"
+        ></ng-icon>
+      </span>
+    </button>
+    <ul
+      *hlListboxOptions
+      @toggleAnimation
+      class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+    >
+      <ng-container *ngFor="let person of people">
+        <li
+          *hlListboxOption="
+            let option;
+            value: person;
+            disabled: person.unavailable
+          "
+          class="relative cursor-default select-none py-2 pl-10 pr-4"
+          [class]="
+            option.active ? 'bg-gray-100 text-gray-900' : 'text-gray-900'
+          "
+        >
+          <span
+            class="block truncate"
+            [class.text-gray-300]="person.unavailable"
+            >{{ person.name }}</span
+          >
+
+          <span
+            *ngIf="option.selected"
+            class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-600"
+          >
+            <ng-icon
+              name="hero-check"
+              class="text-xl text-gray-800"
+              aria-hidden="true"
+            ></ng-icon>
+          </span>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+</div>
