@@ -58,4 +58,37 @@
       <app-unstyled-select></app-unstyled-select>
     </app-demo-container>
   </div>
+
+  <h1
+    id="transition"
+    class="text-2xl font-bold mb-8 text-gray-700 mt-28 scroll-mt-12"
+  >
+    Transition
+  </h1>
+
+  <div>
+    <app-demo-container
+      name="Simple"
+      [htmlSource]="formattedSources.transitionHtml"
+      [typescriptSource]="formattedSources.transitionTypescript"
+    >
+      <app-transition></app-transition>
+    </app-demo-container>
+  </div>
+
+  <h1
+    id="transition2"
+    class="text-2xl font-bold mb-8 text-gray-700 mt-28 scroll-mt-12"
+  >
+    Transition 2
+  </h1>
+
+  <div>
+    <app-demo-container
+      name="Simple"
+      [htmlSource]="formattedSources.transitionHtml"
+      [typescriptSource]="formattedSources.transitionTypescript"
+      ><app-transition-2></app-transition-2
+    ></app-demo-container>
+  </div>
 </div>

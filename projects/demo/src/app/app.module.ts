@@ -17,8 +17,11 @@ import {
   HashLocationStrategy,
   Location,
   LocationStrategy,
-  PathLocationStrategy,
 } from '@angular/common';
+import { TransitionModule } from '../../../headlessui-angular/src/lib/transition/transition';
+import { TransitionComponent } from './demo-components/transition/transition.component';
+import { TransitionModule2 } from '../../../headlessui-angular/src/lib/transition/transition2';
+import { Transition2Component } from './demo-components/transition2/transition2.component';
 
 @NgModule({
   declarations: [
@@ -29,12 +32,16 @@ import {
     UnstyledMenuComponent,
     UnstyledSelectComponent,
     StyledSelectComponent,
+    TransitionComponent,
+    Transition2Component,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     MenuModule,
     ListboxModule,
+    TransitionModule,
+    TransitionModule2,
     OverlayModule,
     NgIconsModule.withIcons({ HeroSelector, HeroCheck }),
   ],

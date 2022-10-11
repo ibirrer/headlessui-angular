@@ -1,5 +1,5 @@
 <!-- Styled Menu using angular cdk overlay: https://material.angular.io/cdk/overlay/overview -->
-<div class="relative inline-block text-left">
+<div class="relative flex justify-center">
   <div
     hlMenu
     [static]="true"
@@ -28,6 +28,7 @@
       [cdkConnectedOverlayOpen]="menu.expanded"
     >
       <div
+        @toggleAnimation
         id="m1"
         *hlMenuItems
         class="w-56 mt-2 mb-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"

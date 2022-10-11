@@ -1,0 +1,30 @@
+<div>
+  <div class="w-40 h-40 mx-auto">
+    <div
+      *hlTransition="
+        shown;
+        enter: 'transform transition duration-[400ms]';
+        enterFrom: 'opacity-0 rotate-[-120deg] scale-50';
+        enterTo: 'opacity-100 rotate-0 scale-100';
+        leave: 'transform duration-200 transition ease-in-out';
+        leaveFrom: 'opacity-100 rotate-0 scale-100';
+        leaveTo: 'opacity-0 scale-95'
+      "
+      class="p-2 bg-yellow-500 text-white h-full rounded-xl shadow-lg"
+    ></div>
+  </div>
+
+  <div class="mt-12 flex justify-center">
+    <div>
+      <button
+        class="rounded-md border border-gray-300 bg-white px-6 py-2 text-gray-700 shadow-sm hover:bg-gray-50"
+        (click)="toggle()"
+      >
+        Toggle
+      </button>
+      <div class="text-center mt-2 text-gray-400">
+        {{ shown ? "shown" : "hidden" }}
+      </div>
+    </div>
+  </div>
+</div>

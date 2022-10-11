@@ -1,0 +1,4 @@
+tasks:
+  - name: frontend
+    init: npm install
+    command: npm run serve:gitpod
