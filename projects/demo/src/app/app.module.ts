@@ -17,8 +17,8 @@ import {
   HashLocationStrategy,
   Location,
   LocationStrategy,
-  PathLocationStrategy,
 } from '@angular/common';
+import { TransitionModule } from '../../../headlessui-angular/src/lib/transition/transition';
 
 @NgModule({
   declarations: [
@@ -35,6 +35,7 @@ import {
     BrowserAnimationsModule,
     MenuModule,
     ListboxModule,
+    TransitionModule,
     OverlayModule,
     NgIconsModule.withIcons({ HeroSelector, HeroCheck }),
   ],
