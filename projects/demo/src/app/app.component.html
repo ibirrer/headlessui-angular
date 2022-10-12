@@ -72,10 +72,12 @@
         <div
           *hlTransition="
             open;
-            enter: 'transition-opacity ease-in duration-1000';
+            enter: 'transition-opacity ease-in duration-200';
             enterFrom: 'opacity-0';
             enterTo: 'opacity-100';
-            leaveTo: 'opacity-100'
+            leave: 'transition-opacity ease-out duration-1000';
+            leaveFrom: 'opacity-100';
+            leaveTo: 'opacity-0'
           "
           class="p-2 bg-blue-600 text-white"
         >

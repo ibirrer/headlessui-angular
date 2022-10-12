@@ -46,8 +46,22 @@ export class TransitionDirective {
   set hlTransition(show: boolean) {
     if (show) {
       this.cancelLeaveAnimation = true;
+      if (this.viewRef) {
+        // element not removed because leave animation is still running
+        const element = this.viewRef.rootNodes[0];
+        element.classList.remove(
+          ...this.leaveClasses,
+          ...this.leaveFromClasses,
+          ...this.leaveToClasses
+        );
+      }
+
       if (!this.viewRef) {
         this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef);
+        if (this.initial) {
+          this.initial = false;
+          return;
+        }
         const element = this.viewRef.rootNodes[0];
         element.classList.add(...this.enterFromClasses);
         flush(element);
@@ -55,6 +69,11 @@ export class TransitionDirective {
         element.classList.add(...this.enterClasses, ...this.enterToClasses);
       }
     } else {
+      if (this.initial) {
+        this.initial = false;
+        return;
+      }
+
       if (!this.viewRef) {
         console.error('viewRef not set');
         return;
@@ -62,11 +81,18 @@ export class TransitionDirective {
 
       this.cancelLeaveAnimation = false;
       const element = this.viewRef.rootNodes[0];
-      const duration = getDuration(element);
-      element.classList.remove(...this.enterClasses, ...this.enterToClasses);
-      flush(element);
-      element.
 
+      // prepare animation by removing enter-classes and add leave- and leaveFrom-classes.
+      element.classList.remove(...this.enterClasses, ...this.enterToClasses);
+      element.classList.add(...this.leaveClasses, ...this.leaveFromClasses);
+      const duration = getDuration(element);
+      flush(element);
+
+      // start animation by removing from- and add to-classes
+      element.classList.remove(...this.leaveFromClasses);
+      element.classList.add(...this.leaveToClasses);
+
+      // start timeout to remove element after animation finished
       setTimeout(() => {
         if (this.cancelLeaveAnimation) {
           return;
@@ -87,6 +113,8 @@ export class TransitionDirective {
   private leaveClasses: string[] = [];
   private leaveFromClasses: string[] = [];
   private leaveToClasses: string[] = [];
+
+  private initial = true;
 
   constructor(
     private viewContainer: ViewContainerRef,

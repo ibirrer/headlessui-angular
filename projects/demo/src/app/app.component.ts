@@ -3,17 +3,10 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   Inject,
-  Renderer2,
 } from '@angular/core';
 import * as formattedSources from './formattedSources';
-import {
-  DOCUMENT,
-  Location,
-  LocationStrategy,
-  PathLocationStrategy,
-} from '@angular/common';
+import { DOCUMENT, Location } from '@angular/common';
 
 @Component({
   selector: 'app-root',
