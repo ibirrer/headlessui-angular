@@ -12,13 +12,14 @@ import {
   exportAs: 'hlTransition',
 })
 export class TransitionDirective {
-  cancelLeaveAnimation = true;
-  enterToClasses: string[] = [];
-
   @Input()
   set hlTransitionEnterTo(classes: string) {
-    console.log('enterTo', classes);
     this.enterToClasses = splitClasses(classes);
+  }
+
+  @Input()
+  set hlTransitionLeaveTo(classes: string) {
+    this.leaveToToClasses = splitClasses(classes);
   }
 
   @Input()
@@ -27,16 +28,23 @@ export class TransitionDirective {
       this.cancelLeaveAnimation = true;
       if (!this.viewRef) {
         this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef);
-        console.log(this.enterToClasses);
         const element = this.viewRef.rootNodes[0];
         // See https://stackoverflow.com/a/24195559 why this is needed
         window.getComputedStyle(element).opacity;
         element.classList.add(...this.enterToClasses);
       }
     } else {
+      if (!this.viewRef) {
+        console.error('viewRef not set');
+        return;
+      }
+
       this.cancelLeaveAnimation = false;
-      // @ts-ignore
-      this.timeoutId = setTimeout(() => {
+      const element = this.viewRef.rootNodes[0];
+      const duration = getDuration(element);
+      console.log('duration', duration);
+
+      setTimeout(() => {
         if (this.cancelLeaveAnimation) {
           return;
         }
@@ -55,6 +63,9 @@ export class TransitionDirective {
   }
 
   private viewRef: EmbeddedViewRef<void> | null = null;
+  private cancelLeaveAnimation = true;
+  private enterToClasses: string[] = [];
+  private leaveToToClasses: string[] = [];
 
   constructor(
     private viewContainer: ViewContainerRef,
@@ -72,4 +83,25 @@ export class TransitionModule {}
 
 function splitClasses(classes: string) {
   return classes.split(' ').filter((className) => className.trim().length > 1);
+}
+
+function getDuration(element: HTMLElement) {
+  // Safari returns a comma separated list of values, so let's sort them and take the highest value.
+  let { transitionDuration, transitionDelay } = getComputedStyle(element);
+
+  let [durationMs, delayMs] = [transitionDuration, transitionDelay].map(
+    (value) => {
+      let [resolvedValue = 0] = value
+        .split(',')
+        // Remove falsy we can't work with
+        .filter(Boolean)
+        // Values are returned as `0.3s` or `75ms`
+        .map((v) => (v.includes('ms') ? parseFloat(v) : parseFloat(v) * 1000))
+        .sort((a, z) => z - a);
+
+      return resolvedValue;
+    }
+  );
+
+  let totalDuration = durationMs + delayMs;
 }
