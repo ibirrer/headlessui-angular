@@ -70,8 +70,14 @@
     <app-demo-container class="relative" name="Simple">
       <div>
         <div
-          *hlTransition="open; enterTo: 'opacity-100'; leaveTo: 'opacity-100'"
-          class="p-2 transition ease-out duration-500 bg-blue-200 opacity-0"
+          *hlTransition="
+            open;
+            enter: 'transition-opacity ease-in duration-1000';
+            enterFrom: 'opacity-0';
+            enterTo: 'opacity-100';
+            leaveTo: 'opacity-100'
+          "
+          class="p-2 bg-blue-600 text-white"
         >
           Animated Element
         </div>

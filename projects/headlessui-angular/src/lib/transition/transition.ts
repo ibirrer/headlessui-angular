@@ -13,6 +13,16 @@ import {
 })
 export class TransitionDirective {
   @Input()
+  set hlTransitionEnter(classes: string) {
+    this.enterClasses = splitClasses(classes);
+  }
+
+  @Input()
+  set hlTransitionEnterFrom(classes: string) {
+    this.enterFromClasses = splitClasses(classes);
+  }
+
+  @Input()
   set hlTransitionEnterTo(classes: string) {
     this.enterToClasses = splitClasses(classes);
   }
@@ -29,9 +39,16 @@ export class TransitionDirective {
       if (!this.viewRef) {
         this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef);
         const element = this.viewRef.rootNodes[0];
+        element.classList.add(...this.enterFromClasses);
         // See https://stackoverflow.com/a/24195559 why this is needed
         window.getComputedStyle(element).opacity;
-        element.classList.add(...this.enterToClasses);
+        element.classList.remove(...this.enterFromClasses);
+        element.classList.add(...this.enterClasses, ...this.enterToClasses);
+
+        // window.getComputedStyle(element).opacity;
+        // element.classList.remove(...this.enterFromClasses);
+        // console.log('classList', element.classList);
+        // element.classList.remove(...this.enterToClasses);
       }
     } else {
       if (!this.viewRef) {
@@ -64,6 +81,8 @@ export class TransitionDirective {
 
   private viewRef: EmbeddedViewRef<void> | null = null;
   private cancelLeaveAnimation = true;
+  private enterClasses: string[] = [];
+  private enterFromClasses: string[] = [];
   private enterToClasses: string[] = [];
   private leaveToToClasses: string[] = [];
 
