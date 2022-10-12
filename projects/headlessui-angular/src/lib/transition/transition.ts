@@ -13,11 +13,22 @@ import {
 export class TransitionDirective {
   @Input()
   set hlTransition(show: boolean) {
-    if (show && !this.viewRef) {
+    if (show) {
+      console.log('show');
       this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef);
-    } else if (this.viewRef) {
-      this.viewContainer.clear();
-      this.viewRef = null;
+    } else {
+      setTimeout(() => {
+        if (show) {
+          console.log('t:show');
+          this.viewRef = this.viewContainer.createEmbeddedView(
+            this.templateRef
+          );
+        } else {
+          console.log('t:hide');
+          this.viewContainer.clear();
+          this.viewRef = null;
+        }
+      }, 1000);
     }
   }
 

@@ -66,9 +66,17 @@
     Transition
   </h1>
 
-  <div class="space-y-20">
-    <app-demo-container name="Simple">
-      <div *hlTransition="true">Animated Element</div>
+  <div>
+    <app-demo-container class="relative" name="Simple">
+      <div>
+        <div *hlTransition="open">Animated Element</div>
+        <div class="absolute w-full bottom-0">
+          <button class="rounded bg-gray-300" (click)="open = !open">
+            Toggle
+          </button>
+          Open: {{ open }}
+        </div>
+      </div>
     </app-demo-container>
   </div>
 </div>

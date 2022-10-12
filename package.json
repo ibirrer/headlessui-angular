@@ -5,7 +5,7 @@
   "description": "Headless UI components for angular",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --host 0.0.0.0",
     "build": "cross-env NODE_ENV=production ng build && cpy README.md dist/headlessui-angular",
     "build:demo": "cross-env NODE_ENV=production ng build demo",
     "watch": "ng build --watch --configuration development",

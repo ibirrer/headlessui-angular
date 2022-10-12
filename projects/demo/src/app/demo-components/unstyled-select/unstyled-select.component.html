@@ -3,7 +3,7 @@
   [value]="selectedPerson"
   (valueChange)="setSelectedPerson($event)"
 >
-  <button hlListboxButton class="w-full">
+  <button hlListboxButton>
     {{ selectedPerson?.name }}
   </button>
   <ul *hlListboxOptions>

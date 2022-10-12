@@ -52,13 +52,8 @@
     }"
   >
     <!-- PREVIEW -->
-    <div class="flex justify-center">
-      <div
-        class="relative inline-block text-left"
-        *ngIf="display === 'Preview'"
-      >
-        <ng-content></ng-content>
-      </div>
+    <div *ngIf="display === 'Preview'">
+      <ng-content></ng-content>
     </div>
 
     <!-- HTML -->

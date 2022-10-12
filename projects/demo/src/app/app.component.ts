@@ -33,6 +33,7 @@ import {
 })
 export class AppComponent implements AfterViewInit {
   formattedSources = formattedSources;
+  open = true;
 
   constructor(
     private location: Location,
