@@ -1,10 +1,16 @@
-import { AfterViewInit, Component, Inject } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+} from '@angular/core';
 import * as formattedSources from './formattedSources';
 import { DOCUMENT, Location } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent implements AfterViewInit {
   formattedSources = formattedSources;

@@ -1,8 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-transition',
@@ -11,14 +7,7 @@ import {
 })
 export class TransitionComponent {
   shown = true;
-
-  constructor(private changeDetectorRef: ChangeDetectorRef) {}
-
   toggle() {
-    this.shown = false;
-    setTimeout(() => {
-      this.shown = true;
-      this.changeDetectorRef.markForCheck();
-    }, 500);
+    this.shown = !this.shown;
   }
 }

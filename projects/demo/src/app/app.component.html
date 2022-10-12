@@ -67,7 +67,11 @@
   </h1>
 
   <div>
-    <app-demo-container name="Simple">
+    <app-demo-container
+      name="Simple"
+      [htmlSource]="formattedSources.transitionHtml"
+      [typescriptSource]="formattedSources.transitionTypescript"
+    >
       <app-transition></app-transition>
     </app-demo-container>
   </div>

@@ -1,17 +1,17 @@
 <div>
   <div class="w-40 h-40 mx-auto">
-    <ng-template
-      [hlTransition]="shown"
-      hlTransitionEnter="transform transition duration-[400ms]"
-      hlTransitionEnterFrom="opacity-0 rotate-[-120deg] scale-50"
-      hlTransitionEnterTo="opacity-100 rotate-0 scale-100"
-      hlTransitionLeave="transform duration-200 transition ease-in-out"
-      hlTransitionLeaveFrom="opacity-100 rotate-0 scale-100 "
-      hlTransitionLeaveTo="opacity-0 scale-95 "
-      ><div
-        class="p-2 bg-yellow-500 text-white h-full rounded-xl shadow-lg"
-      ></div
-    ></ng-template>
+    <div
+      *hlTransition="
+        shown;
+        enter: 'transform transition duration-[400ms]';
+        enterFrom: 'opacity-0 rotate-[-120deg] scale-50';
+        enterTo: 'opacity-100 rotate-0 scale-100';
+        leave: 'transform duration-200 transition ease-in-out';
+        leaveFrom: 'opacity-100 rotate-0 scale-100';
+        leaveTo: 'opacity-0 scale-95'
+      "
+      class="p-2 bg-yellow-500 text-white h-full rounded-xl shadow-lg"
+    ></div>
   </div>
 
   <div class="mt-12 flex justify-center">
