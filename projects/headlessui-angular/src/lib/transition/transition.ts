@@ -28,8 +28,18 @@ export class TransitionDirective {
   }
 
   @Input()
+  set hlTransitionLeave(classes: string) {
+    this.leaveClasses = splitClasses(classes);
+  }
+
+  @Input()
+  set hlTransitionLeaveFrom(classes: string) {
+    this.leaveFromClasses = splitClasses(classes);
+  }
+
+  @Input()
   set hlTransitionLeaveTo(classes: string) {
-    this.leaveToToClasses = splitClasses(classes);
+    this.leaveToClasses = splitClasses(classes);
   }
 
   @Input()
@@ -40,15 +50,9 @@ export class TransitionDirective {
         this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef);
         const element = this.viewRef.rootNodes[0];
         element.classList.add(...this.enterFromClasses);
-        // See https://stackoverflow.com/a/24195559 why this is needed
-        window.getComputedStyle(element).opacity;
+        flush(element);
         element.classList.remove(...this.enterFromClasses);
         element.classList.add(...this.enterClasses, ...this.enterToClasses);
-
-        // window.getComputedStyle(element).opacity;
-        // element.classList.remove(...this.enterFromClasses);
-        // console.log('classList', element.classList);
-        // element.classList.remove(...this.enterToClasses);
       }
     } else {
       if (!this.viewRef) {
@@ -59,32 +63,30 @@ export class TransitionDirective {
       this.cancelLeaveAnimation = false;
       const element = this.viewRef.rootNodes[0];
       const duration = getDuration(element);
-      console.log('duration', duration);
+      element.classList.remove(...this.enterClasses, ...this.enterToClasses);
+      flush(element);
+      element.
 
       setTimeout(() => {
         if (this.cancelLeaveAnimation) {
           return;
         }
-        if (show) {
-          console.log('t:show');
-          this.viewRef = this.viewContainer.createEmbeddedView(
-            this.templateRef
-          );
-        } else {
-          console.log('t:hide');
-          this.viewContainer.clear();
-          this.viewRef = null;
-        }
-      }, 500);
+        this.viewContainer.clear();
+        this.viewRef = null;
+      }, duration);
     }
   }
 
   private viewRef: EmbeddedViewRef<void> | null = null;
   private cancelLeaveAnimation = true;
+
   private enterClasses: string[] = [];
   private enterFromClasses: string[] = [];
   private enterToClasses: string[] = [];
-  private leaveToToClasses: string[] = [];
+
+  private leaveClasses: string[] = [];
+  private leaveFromClasses: string[] = [];
+  private leaveToClasses: string[] = [];
 
   constructor(
     private viewContainer: ViewContainerRef,
@@ -122,5 +124,10 @@ function getDuration(element: HTMLElement) {
     }
   );
 
-  let totalDuration = durationMs + delayMs;
+  return durationMs + delayMs;
+}
+
+function flush(element: HTMLElement) {
+  // See https://stackoverflow.com/a/24195559 why this is needed
+  window.getComputedStyle(element).opacity;
 }
