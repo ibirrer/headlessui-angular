@@ -54,20 +54,21 @@ export class TransitionDirective {
           ...this.leaveFromClasses,
           ...this.leaveToClasses
         );
-      }
-
-      if (!this.viewRef) {
+      } else {
         this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef);
         if (this.initial) {
           this.initial = false;
           return;
         }
-        const element = this.viewRef.rootNodes[0];
-        element.classList.add(...this.enterFromClasses);
-        flush(element);
-        element.classList.remove(...this.enterFromClasses);
-        element.classList.add(...this.enterClasses, ...this.enterToClasses);
       }
+
+      const element = this.viewRef.rootNodes[0];
+      // prepare animation
+      element.classList.add(...this.enterFromClasses);
+      flush(element);
+      // start animation
+      element.classList.remove(...this.enterFromClasses);
+      element.classList.add(...this.enterClasses, ...this.enterToClasses);
     } else {
       if (this.initial) {
         this.initial = false;
