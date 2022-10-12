@@ -9,22 +9,35 @@ import {
 
 @Directive({
   selector: '[hlTransition]',
+  exportAs: 'hlTransition',
 })
 export class TransitionDirective {
-  leaveAnimationInProgress = false;
+  cancelLeaveAnimation = true;
+  enterToClasses: string[] = [];
+
+  @Input()
+  set hlTransitionEnterTo(classes: string) {
+    console.log('enterTo', classes);
+    this.enterToClasses = splitClasses(classes);
+  }
 
   @Input()
   set hlTransition(show: boolean) {
     if (show) {
-      this.leaveAnimationInProgress = false;
+      this.cancelLeaveAnimation = true;
       if (!this.viewRef) {
         this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef);
+        console.log(this.enterToClasses);
+        const element = this.viewRef.rootNodes[0];
+        // See https://stackoverflow.com/a/24195559 why this is needed
+        window.getComputedStyle(element).opacity;
+        element.classList.add(...this.enterToClasses);
       }
     } else {
-      this.leaveAnimationInProgress = true;
+      this.cancelLeaveAnimation = false;
       // @ts-ignore
       this.timeoutId = setTimeout(() => {
-        if (!this.leaveAnimationInProgress) {
+        if (this.cancelLeaveAnimation) {
           return;
         }
         if (show) {
@@ -37,7 +50,7 @@ export class TransitionDirective {
           this.viewContainer.clear();
           this.viewRef = null;
         }
-      }, 1000);
+      }, 500);
     }
   }
 
@@ -56,3 +69,7 @@ export class TransitionDirective {
   providers: [],
 })
 export class TransitionModule {}
+
+function splitClasses(classes: string) {
+  return classes.split(' ').filter((className) => className.trim().length > 1);
+}

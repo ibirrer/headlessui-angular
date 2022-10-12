@@ -69,7 +69,12 @@
   <div>
     <app-demo-container class="relative" name="Simple">
       <div>
-        <div *hlTransition="open">Animated Element</div>
+        <div
+          *hlTransition="open; enterTo: 'opacity-100'"
+          class="p-2 transition ease-out duration-500 bg-blue-200 opacity-0"
+        >
+          Animated Element
+        </div>
         <div class="absolute w-full bottom-0">
           <button class="rounded bg-gray-300" (click)="open = !open">
             Toggle
