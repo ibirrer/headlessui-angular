@@ -11,22 +11,22 @@ import {
   selector: '[hlTransition]',
 })
 export class TransitionDirective {
-  timeoutId = null;
+  leaveAnimationInProgress = false;
 
   @Input()
   set hlTransition(show: boolean) {
-    if (this.timeoutId) {
-      console.log('cancel timeout');
-      clearTimeout(this.timeoutId);
-      this.timeoutId = null;
-    }
     if (show) {
+      this.leaveAnimationInProgress = false;
       if (!this.viewRef) {
         this.viewRef = this.viewContainer.createEmbeddedView(this.templateRef);
       }
     } else {
+      this.leaveAnimationInProgress = true;
       // @ts-ignore
       this.timeoutId = setTimeout(() => {
+        if (!this.leaveAnimationInProgress) {
+          return;
+        }
         if (show) {
           console.log('t:show');
           this.viewRef = this.viewContainer.createEmbeddedView(
