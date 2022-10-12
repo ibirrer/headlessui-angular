@@ -19,6 +19,7 @@ import {
   LocationStrategy,
 } from '@angular/common';
 import { TransitionModule } from '../../../headlessui-angular/src/lib/transition/transition';
+import { TransitionComponent } from './demo-components/transition/transition.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { TransitionModule } from '../../../headlessui-angular/src/lib/transition
     UnstyledMenuComponent,
     UnstyledSelectComponent,
     StyledSelectComponent,
+    TransitionComponent,
   ],
   imports: [
     BrowserModule,

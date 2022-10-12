@@ -8,17 +8,11 @@ import { DOCUMENT, Location } from '@angular/common';
 })
 export class AppComponent implements AfterViewInit {
   formattedSources = formattedSources;
-  shown = true;
 
   constructor(
     private location: Location,
     @Inject(DOCUMENT) private document: Document
   ) {}
-
-  toggle() {
-    this.shown = false;
-    setTimeout(() => (this.shown = true), 500);
-  }
 
   ngAfterViewInit(): void {
     const element = this.document.getElementById(this.location.path());
