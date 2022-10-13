@@ -76,20 +76,20 @@ export class TransitionDirective2 {
 
       console.log('classList', element.classList);
       console.log('duration', duration);
-      flush(element);
-
-      // start animation by removing from- and add to-classes
-      element.classList.remove(...this.leaveFromClasses);
-      element.classList.add(...this.leaveToClasses);
-
-      // start timeout to remove element after animation finished
       setTimeout(() => {
-        if (this.cancelLeaveAnimation) {
-          return;
-        }
-        this.ignoreRemoveMutation = true;
-        this.element.removeChild(removedNode);
-      }, duration);
+        // start animation by removing from- and add to-classes
+        element.classList.remove(...this.leaveFromClasses);
+        element.classList.add(...this.leaveToClasses);
+
+        // start timeout to remove element after animation finished
+        setTimeout(() => {
+          if (this.cancelLeaveAnimation) {
+            return;
+          }
+          this.ignoreRemoveMutation = true;
+          this.element.removeChild(removedNode);
+        }, duration);
+      });
     }
   });
 
