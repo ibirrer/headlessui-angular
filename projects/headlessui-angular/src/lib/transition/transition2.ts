@@ -3,7 +3,7 @@ import { Directive, ElementRef, Input, NgModule } from '@angular/core';
 @Directive({
   selector: 'transition',
 })
-export class TransitionDirective2 {
+export class Transition2Directive {
   private readonly element!: HTMLElement;
 
   private cancelLeaveAnimation = false;
@@ -135,8 +135,8 @@ function flush(element: HTMLElement) {
 
 @NgModule({
   imports: [],
-  exports: [TransitionDirective2],
-  declarations: [TransitionDirective2],
+  exports: [Transition2Directive],
+  declarations: [Transition2Directive],
   providers: [],
 })
 export class TransitionModule2 {}
