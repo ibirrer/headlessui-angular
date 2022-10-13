@@ -14,6 +14,7 @@ import { DOCUMENT, Location } from '@angular/common';
 })
 export class AppComponent implements AfterViewInit {
   formattedSources = formattedSources;
+  show = true;
 
   constructor(
     private location: Location,
