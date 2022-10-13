@@ -1,5 +1,5 @@
 <div class="flex justify-center">
-  <div hlMenu class="relative">
+  <div hlMenu [static]="true" #menu="hlMenu" class="relative">
     <span class="rounded-md shadow-sm">
       <button
         hlMenuButton
@@ -17,61 +17,80 @@
     </span>
 
     <div
-      *hlMenuItems
-      @toggleAnimation
-      class="absolute right-0 w-56 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
+      *hlTransition="
+        menu.expanded;
+        enter: 'transition ease-out duration-100';
+        enterFrom: 'transform opacity-0 scale-95';
+        enterTo: 'transform opacity-100 scale-100';
+        leave: 'transition ease-in duration-75';
+        leaveFrom: 'transform opacity-100 scale-100';
+        leaveTo: 'transform opacity-0 scale-95'
+      "
     >
-      <div class="px-4 py-3">
-        <p class="text-sm leading-5">Signed in as</p>
-        <p class="text-sm font-medium leading-5 text-gray-900 truncate">
-          tom@example.com
-        </p>
-      </div>
-      <div class="py-1">
-        <a
-          *hlMenuItem="let item"
-          href="./#account-settings"
-          [class]="item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'"
-          class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
-        >
-          Account settings
-        </a>
+      <div
+        *hlMenuItems
+        class="absolute right-0 w-56 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none"
+      >
+        <div class="px-4 py-3">
+          <p class="text-sm leading-5">Signed in as</p>
+          <p class="text-sm font-medium leading-5 text-gray-900 truncate">
+            tom@example.com
+          </p>
+        </div>
+        <div class="py-1">
+          <a
+            *hlMenuItem="let item"
+            href="./#account-settings"
+            [class]="
+              item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+            "
+            class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
+          >
+            Account settings
+          </a>
 
-        <a
-          *hlMenuItem="let item"
-          href="./#support"
-          [class]="item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'"
-          class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
-        >
-          Support
-        </a>
+          <a
+            *hlMenuItem="let item"
+            href="./#support"
+            [class]="
+              item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+            "
+            class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
+          >
+            Support
+          </a>
 
-        <span
-          *hlMenuItem="let item; disabled: true"
-          class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left text-gray-700 cursor-not-allowed opacity-50"
-        >
-          New feature (soon)
-        </span>
+          <span
+            *hlMenuItem="let item; disabled: true"
+            class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left text-gray-700 cursor-not-allowed opacity-50"
+          >
+            New feature (soon)
+          </span>
 
-        <a
-          *hlMenuItem="let item"
-          href="./#license"
-          [class]="item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'"
-          class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
-        >
-          License
-        </a>
-      </div>
+          <a
+            *hlMenuItem="let item"
+            href="./#license"
+            [class]="
+              item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+            "
+            class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
+          >
+            License
+          </a>
+        </div>
 
-      <div class="py-1">
-        <a
-          *hlMenuItem="let item"
-          href="./#sign-out"
-          [class]="item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'"
-          class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
-        >
-          Sign out
-        </a>
+        <div class="py-1">
+          <a
+            *hlMenuItem="let item"
+            href="./#sign-out"
+            [class]="
+              item.active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
+            "
+            class="flex justify-between w-full px-4 py-2 text-sm leading-5 text-left"
+          >
+            Sign out
+          </a>
+        </div>
       </div>
     </div>
   </div>
