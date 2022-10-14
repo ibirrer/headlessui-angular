@@ -56,6 +56,10 @@ export class Transition2Directive {
     if (addedNodes.length > 0) {
       this.ignoreRemoveMutation = false;
       const element = addedNodes[0] as HTMLElement;
+      if (!(element instanceof HTMLElement)) {
+        return;
+      }
+      console.log('element.classList', element.classList);
 
       // prepare animation
       element.classList.add(...this.enterFromClasses);
