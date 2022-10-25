@@ -1,5 +1,5 @@
 <div class="flex justify-center">
-  <div hlMenu [static]="true" #menu="hlMenu" class="relative">
+  <div hlMenu class="relative">
     <span class="rounded-md shadow-sm">
       <button
         hlMenuButton
@@ -16,16 +16,13 @@
       </button>
     </span>
 
-    <div
-      *hlTransition="
-        menu.expanded;
-        enter: 'transition ease-out duration-100';
-        enterFrom: 'transform opacity-0 scale-95';
-        enterTo: 'transform opacity-100 scale-100';
-        leave: 'transition ease-in duration-75';
-        leaveFrom: 'transform opacity-100 scale-100';
-        leaveTo: 'transform opacity-0 scale-95'
-      "
+    <transition
+      enter="transition ease-out duration-100"
+      enterFrom="transform opacity-0 scale-95"
+      enterTo="transform opacity-100 scale-100"
+      leave="transition ease-in duration-75"
+      leaveFrom="transform opacity-100 scale-100"
+      leaveTo="transform opacity-0 scale-95"
     >
       <div
         *hlMenuItems
@@ -92,6 +89,6 @@
           </a>
         </div>
       </div>
-    </div>
+    </transition>
   </div>
 </div>

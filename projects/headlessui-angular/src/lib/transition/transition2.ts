@@ -1,6 +1,7 @@
 import { Directive, ElementRef, Input, NgModule } from '@angular/core';
 
 @Directive({
+  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: 'transition',
 })
 export class Transition2Directive {
@@ -59,14 +60,14 @@ export class Transition2Directive {
       if (!(element instanceof HTMLElement)) {
         return;
       }
-      console.log('element.classList', element.classList);
 
       // prepare animation
       element.classList.add(...this.enterFromClasses);
-      flush(element);
-      // start animation
-      element.classList.remove(...this.enterFromClasses);
-      element.classList.add(...this.enterClasses, ...this.enterToClasses);
+      requestAnimationFrame(() => {
+        // start animation
+        element.classList.remove(...this.enterFromClasses);
+        element.classList.add(...this.enterClasses, ...this.enterToClasses);
+      });
     }
 
     if (removedNodes.length > 0 && !this.ignoreRemoveMutation) {
@@ -77,9 +78,6 @@ export class Transition2Directive {
       element.classList.remove(...this.enterClasses, ...this.enterToClasses);
       element.classList.add(...this.leaveClasses, ...this.leaveFromClasses);
       const duration = getDuration(element);
-
-      console.log('classList', element.classList);
-      console.log('duration', duration);
       setTimeout(() => {
         // start animation by removing from- and add to-classes
         element.classList.remove(...this.leaveFromClasses);
