@@ -65,10 +65,11 @@ export class TransitionDirective {
       const element = this.viewRef.rootNodes[0];
       // prepare animation
       element.classList.add(...this.enterFromClasses);
-      flush(element);
-      // start animation
-      element.classList.remove(...this.enterFromClasses);
-      element.classList.add(...this.enterClasses, ...this.enterToClasses);
+      requestAnimationFrame(() => {
+        // start animation
+        element.classList.remove(...this.enterFromClasses);
+        element.classList.add(...this.enterClasses, ...this.enterToClasses);
+      });
     } else {
       if (this.initial) {
         this.initial = false;
@@ -87,20 +88,20 @@ export class TransitionDirective {
       element.classList.remove(...this.enterClasses, ...this.enterToClasses);
       element.classList.add(...this.leaveClasses, ...this.leaveFromClasses);
       const duration = getDuration(element);
-      flush(element);
+      requestAnimationFrame(() => {
+        // start animation by removing from- and add to-classes
+        element.classList.remove(...this.leaveFromClasses);
+        element.classList.add(...this.leaveToClasses);
 
-      // start animation by removing from- and add to-classes
-      element.classList.remove(...this.leaveFromClasses);
-      element.classList.add(...this.leaveToClasses);
-
-      // start timeout to remove element after animation finished
-      setTimeout(() => {
-        if (this.cancelLeaveAnimation) {
-          return;
-        }
-        this.viewContainer.clear();
-        this.viewRef = null;
-      }, duration);
+        // start timeout to remove element after animation finished
+        setTimeout(() => {
+          if (this.cancelLeaveAnimation) {
+            return;
+          }
+          this.viewContainer.clear();
+          this.viewRef = null;
+        }, duration);
+      });
     }
   }
 
@@ -154,9 +155,4 @@ function getDuration(element: HTMLElement) {
   );
 
   return durationMs + delayMs;
-}
-
-function flush(element: HTMLElement) {
-  // See https://stackoverflow.com/a/24195559 why this is needed
-  window.getComputedStyle(element).opacity;
 }
