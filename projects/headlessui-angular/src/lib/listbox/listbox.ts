@@ -448,7 +448,7 @@ export class ListboxOptionDirective<T> implements OnInit {
   private initAttributes(element: HTMLElement) {
     element.id = `headlessui-listbox-option-${generateId()}`;
     element.tabIndex = -1;
-    element.setAttribute('role', 'listboxoption');
+    element.setAttribute('role', 'option');
     if (this.hlListboxOptionDisabled) {
       this.element.setAttribute('aria-disabled', 'true');
     } else {
